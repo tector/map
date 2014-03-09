@@ -1,0 +1,67 @@
+* {
+    margin:0;
+    padding:0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+.ngm {
+    display:block;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -400px;
+    margin-top: -400px;
+    outline: 1px solid black;
+    overflow: hidden;
+    background-color: #111;
+}
+
+.grid-svg {
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    height: 500px;
+    width: 500px;
+    margin-left: -250px;
+    margin-top: -250px;
+    outline: 1px solid #888;
+    background-color: #111;
+}
+
+.ngm-grid-layer {z-index: 0}
+.ngm-planets-layer{z-index: 1000}
+.ngm-misc-layer {z-index:500}
+
+.misc {z-index:500;}
+.planet {z-index:1022;}
+.planet:hover,
+.misc:hover {
+    cursor: pointer;
+    outline: 1px solid white;
+}
+
+.grid-push {
+    display:block;
+    position:absolute;
+    border: 1px solid #555;
+    height: 5%;
+    width: 5%;
+    background-color: #333;
+    color: #fff;
+    font-size: 1.5em;
+    text-align: center;
+    margin:0;
+    padding:0;
+    z-index: 1023;
+}
+.grid-push:hover { cursor: pointer; background-color: #444;}
+
+.grid-push-north{top: 0; left:50%;margin-left:-10%;width:20%; border-radius: 0 0 10px 10px;}
+.grid-push-west{top: 50%; left:0;margin-top:-10%; border-radius: 0 10px 10px 0;line-height:100%; padding: 10% 0;}
+.grid-push-east{top: 50%; left:100%;margin-top:-10%;margin-left:-5%; border-radius: 10px 0 0 10px;line-height:100%; padding:10% 0;}
+.grid-push-south{top: 100%; left:50%;margin-top:-5%;margin-left:-10%;width:20%; border-radius: 10px 10px 0 0;}

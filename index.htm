@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nouron Galaxy Map Test</title>
+    <link href="ngm.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="ngm" data-width="700px" data-height="700px"></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!--<script src="https://code.jquery.com/jquery.js"></script>-->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- <script src="js/bootstrap.min.js"></script> -->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="ngm.js"></script>
+    <script>
+        $(document).ready( function() {
+            ngm.init('ngm');
+        })
+    </script>
+  </body>
+</html>

@@ -24,97 +24,197 @@ $(document).ready( function() {
         return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++] })
     }
 
-    function createGridSVGDom(direction) {
-        var tpl = '<svg class="grid-svg %s" width="%spx" height="%spx" style="margin-left: %spx; margin-top: %spx;"></svg>'
-        var width = 500;
-        var height = 500;
-
-        switch (direction) {
-            case 'north-east':
-                class_ = 'grid-north grid-east';
-                margin_left = 250;
-                margin_top = -750;
-                break;
-            case 'east':
-                class_ = 'grid-east';
-                margin_left = 250;
-                margin_top = -250;
-                break;
-            case 'south-east':
-                class_ = 'grid-south grid-east';
-                margin_left = 250;
-                margin_top = 250;
-                break;
-            case 'north-west':
-                class_ = 'grid-north grid-west';
-                margin_left = -750;
-                margin_top = -750;
-                break;
-            case 'west':
-                class_ = 'grid-west';
-                margin_left = -750;
-                margin_top = -250;
-                break;
-            case 'south-west':
-                class_ = 'grid-south grid-west';
-                margin_left = -750;
-                margin_top = 250;
-                break;
-            case 'north':
-                class_ = 'grid-north';
-                margin_left = -250;
-                margin_top = -750;
-                break;
-            case 'south':
-                class_ = 'grid-south';
-                margin_left = -250;
-                margin_top = 250;
-                break;
-            case 'center':
-                class_ = '';
-                margin_left = -250;
-                margint_top = -250;
-            default:
-                break;
-        }
-
-        //console.log(class_, width, height, margin_left, margin_top);
-        return sprintf(tpl, class_, width, height, margin_left, margin_top);
+    function extractDataByCoordLimits(data, xymin, xymax) {
+        return data.filter(function(el){
+            return (el.y >= xymin[1] && el.y < xymax[1]
+                    && el.x >= xymin[0] && el.x < xymax[0]);
+        });
     }
 
     ngm = {
-        init: function(class_, data){
-            var map = $('.'+class_);
-            var width = map.data('width');
-            var height = map.data('height');
-            map.attr('style', 'width:'+width+';height:'+height+';position:absolute');
+        systemsize: 100, // units
+        fieldsize: 5, // pixel
+        width: 700,
+        height: 700,
 
-            map.append(createGridSVGDom('north-west'));
-            ngm.fillWithContent('north-west', []);
-            map.append(createGridSVGDom('north'));
-            ngm.fillWithContent('north', []);
-            map.append(createGridSVGDom('north-east'));
-            ngm.fillWithContent('north-east', []);
+        createGridSVGDom: function(direction) {
+            var tpl = '<svg class="grid-svg %s" width="%spx" height="%spx" style="margin-left: %spx; margin-top: %spx;"></svg>'
+            var width  = ngm.systemsize * ngm.fieldsize;
+            var height = ngm.systemsize * ngm.fieldsize;
 
-            map.append(createGridSVGDom('west'));
-            ngm.fillWithContent('west', []);
-            map.append(createGridSVGDom('center'));
-            ngm.fillWithContent('center', []);
-            map.append(createGridSVGDom('east'));
-            ngm.fillWithContent('east', []);
+            var halfwidth  = width/2;
+            var halfheight = height/2;
 
-            map.append(createGridSVGDom('south-west'));
-            ngm.fillWithContent('south-west', []);
-            map.append(createGridSVGDom('south'));
-            ngm.fillWithContent('south', []);
-            map.append(createGridSVGDom('south-east'));
-            ngm.fillWithContent('south-east', []);
+            switch (direction) {
+                case 'north-east':
+                    class_ = 'grid-north grid-east';
+                    margin_left = halfwidth;
+                    margin_top = -height-halfheight;
+                    break;
+                case 'east':
+                    class_ = 'grid-east';
+                    margin_left = halfwidth;
+                    margin_top = -halfheight;
+                    break;
+                case 'south-east':
+                    class_ = 'grid-south grid-east';
+                    margin_left = halfwidth;
+                    margin_top = halfheight;
+                    break;
+                case 'north-west':
+                    class_ = 'grid-north grid-west';
+                    margin_left = -width-halfwidth;
+                    margin_top  = -height-halfheight;
+                    break;
+                case 'west':
+                    class_ = 'grid-west';
+                    margin_left = -width-halfwidth;
+                    margin_top  = -halfwidth;
+                    break;
+                case 'south-west':
+                    class_ = 'grid-south grid-west';
+                    margin_left = -width-halfwidth;
+                    margin_top  = halfheight;
+                    break;
+                case 'north':
+                    class_ = 'grid-north';
+                    margin_left = -halfwidth;
+                    margin_top  = -height-halfheight;
+                    break;
+                case 'south':
+                    class_ = 'grid-south';
+                    margin_left = -halfwidth;
+                    margin_top  = halfheight;
+                    break;
+                case 'center':
+                    class_ = '';
+                    margin_left = -halfwidth;
+                    margint_top = -halfheight;
+                default:
+                    break;
+            }
+
+            //console.log(class_, width, height, margin_left, margin_top);
+            return sprintf(tpl, class_, width, height, margin_left, margin_top);
+        },
+        setNewCenterCoords: function(coordx, coordy) {
+            // TODO: complete reload of all SVG maps with new coords as center
+        },
+        /**
+         * load data for one svg map:
+         *
+         *        -25
+         *         ^
+         * -25 <- x,y -> +25
+         *         v
+         *        +25
+         *
+         * load data for 9 svg maps:
+         *
+         *        -75
+         *         ^
+         * -75 <- x,y -> +75
+         *         v
+         *        +75
+         *
+         * @param {number} coordx
+         * @param {number} coordy
+         * @return array
+         */
+        loadDataByCoords: function(coordx, coordy) {
+
+
+            // currently use of dummy data
+            // TODO: data should be loaded by ajax request
+            data = [
+                // north-west
+                {'name': 'nw-test', 'type': 'planet', 'x': 1199, 'y': 1199},
+
+                // north
+                {'name': 'north-test', 'type': 'planet', 'x':1225, 'y':1195},
+
+                // north-east
+                {'name': 'ne-test', 'type': 'planet', 'x': 1251, 'y': 1199},
+
+                // west
+                {'name': 'west-test', 'type': 'planet', 'x': 1255, 'y': 1225},
+
+                // center
+                {'name': 'test', 'type': 'planet', 'x': 1210, 'y': 1222},
+                {'name': 'test', 'type': 'planet', 'x': 1211, 'y': 1222},
+                {'name': 'test', 'type': 'planet', 'x': 1212, 'y': 1222},
+                {'name': 'test', 'type': 'planet', 'x': 1213, 'y': 1222},
+                {'name': 'test', 'type': 'planet', 'x': 1214, 'y': 1222},
+                {'name': 'test2', 'type': 'planet', 'x': 1234, 'y': 1234},
+                {'name': 'a station', 'type': 'station', 'x': 1230, 'y': 1210},
+
+                // east
+                {'name': 'debris field', 'type': 'debris', 'x': 1251, 'y': 1243},
+                {'name': 'asteroid field', 'type': 'asteroids', 'x': 1252, 'y': 1243},
+                {'name': 'mine field', 'type': 'mines', 'x': 1253, 'y': 1243},
+                {'name': 'nebular', 'type': 'nebular', 'x': 1254, 'y': 1243},
+
+                // south-west
+                {'name': 'south-west test', 'type': 'planet', 'x': 1199, 'y': 1251},
+
+                // south
+                {'name': 'south test', 'type': 'planet', 'x': 1225, 'y':1255},
+
+                // south-east
+                {'name': 'south-east test', 'type': 'planet', 'x': 1255, 'y': 1255}
+            ]
+            return data;
+        },
+        init: function(selector, coordx, coordy, fieldsize) {
+
+            var map = $(selector);
+            ngm.width  = map.data('width');
+            ngm.height = map.data('height');
+            ngm.fieldsize = parseInt(fieldsize);
+            ngm.coordx = coordx;
+            ngm.coordy = coordy;
+
+            map.attr('style', 'width:'+ngm.width+';height:'+ngm.height+';position:absolute');
+
+            data = ngm.loadDataByCoords(coordx, coordy);
+
+            data_north_west = extractDataByCoordLimits(data, [coordx-75, coordy-75], [coordx-25, coordy-25]);
+            data_north      = extractDataByCoordLimits(data, [coordx-25, coordy-75], [coordx+25, coordy-25]);
+            data_north_east = extractDataByCoordLimits(data, [coordx+25, coordy-75], [coordx+75, coordy-25]);
+
+            map.append(ngm.createGridSVGDom('north-west'));
+            ngm.fillWithContent('north-west', data_north_west);
+            map.append(ngm.createGridSVGDom('north'));
+            ngm.fillWithContent('north', data_north);
+            map.append(ngm.createGridSVGDom('north-east'));
+            ngm.fillWithContent('north-east', data_north_east);
+
+            data_west       = extractDataByCoordLimits(data, [coordx-75, coordy-25], [coordx-25, coordy+25]);
+            data_center     = extractDataByCoordLimits(data, [coordx-25, coordy-25], [coordx+25, coordy+25]);
+            data_east       = extractDataByCoordLimits(data, [coordx+25, coordy-25], [coordx+75, coordy+25]);
+
+            map.append(ngm.createGridSVGDom('west'));
+            ngm.fillWithContent('west', data_west);
+            map.append(ngm.createGridSVGDom('center'));
+            ngm.fillWithContent('center', data_center);
+            map.append(ngm.createGridSVGDom('east'));
+            ngm.fillWithContent('east', data_east);
+
+            data_south_west = extractDataByCoordLimits(data, [coordx-75, coordy+25], [coordx-25, coordy+75]);
+            data_south      = extractDataByCoordLimits(data, [coordx-25, coordy+25], [coordx+25, coordy+75]);
+            data_south_east = extractDataByCoordLimits(data, [coordx+25, coordy+25], [coordx+75, coordy+75]);
+
+            map.append(ngm.createGridSVGDom('south-west'));
+            ngm.fillWithContent('south-west', data_south_west);
+            map.append(ngm.createGridSVGDom('south'));
+            ngm.fillWithContent('south', data_south);
+            map.append(ngm.createGridSVGDom('south-east'));
+            ngm.fillWithContent('south-east', data_south_east);
 
             map.append('<div id="push-north" class="grid-push grid-push-north">&#x25B2;</div>');
             map.append('<div id="push-west" class="grid-push grid-push-west">&#x25C0;</div>');
             map.append('<div id="push-east" class="grid-push grid-push-east">&#x25B6;</div>');
             map.append('<div id="push-south" class="grid-push grid-push-south">&#x25BC;</div>');
-
 
             $('.ngm .grid-push').on('click', function(e) {
                 e.preventDefault();
@@ -124,30 +224,26 @@ $(document).ready( function() {
                     case 'push-east':
                         $('.grid-svg').each(function(){
                             var left = parseInt($(this).css('margin-left').replace('px', ''));
-                            var width =  parseInt($(this).width());
                         });
-                        ngm.addSystem('east');
+                        ngm.addSystems('east');
                         break;
                     case 'push-west':
                         $('.grid-svg').each(function(){
                             var left = parseInt($(this).css('margin-left').replace('px', ''));
-                            var width =  parseInt($(this).width());
                         });
-                        ngm.addSystem('west');
+                        ngm.addSystems('west');
                         break;
                     case 'push-north':
                         $('.grid-svg').each(function(){
                             var top = parseInt($(this).css('margin-top').replace('px', ''));
-                            var height =  parseInt($(this).width());
                         });
-                        ngm.addSystem('north');
+                        ngm.addSystems('north');
                         break;
                     case 'push-south':
                         $('.grid-svg').each(function(){
                             var top = parseInt($(this).css('margin-top').replace('px', ''));
-                            var height =  parseInt($(this).width());
                         });
-                         ngm.addSystem('south');
+                         ngm.addSystems('south');
                         break;
                     default:
                         break;
@@ -156,72 +252,11 @@ $(document).ready( function() {
 
         },
         fillWithContent: function(direction, data) {
-
-            data = [{
-                    'name': 'test',
-                    'type': 'planet',
-                    'x': 1210,
-                    'y': 1222,
-                }, {
-                    'name': 'test',
-                    'type': 'planet',
-                    'x': 1211,
-                    'y': 1222,
-                }, {
-                    'name': 'test',
-                    'type': 'planet',
-                    'x': 1212,
-                    'y': 1222,
-                }, {
-                    'name': 'test',
-                    'type': 'planet',
-                    'x': 1213,
-                    'y': 1222,
-                }, {
-                    'name': 'test',
-                    'type': 'planet',
-                    'x': 1214,
-                    'y': 1222,
-                }, {
-                    'name': 'test2',
-                    'type': 'planet',
-                    'x': 1234,
-                    'y': 1234,
-                }, {
-                    'name': 'a station',
-                    'type': 'station',
-                    'x': 1230,
-                    'y': 1210,
-                }, {
-                    'name': 'debris field',
-                    'type': 'debris',
-                    'x': 1251,
-                    'y': 1243,
-                }, {
-                    'name': 'asteroid field',
-                    'type': 'asteroids',
-                    'x': 1252,
-                    'y': 1243,
-                }, {
-                    'name': 'mine field',
-                    'type': 'mines',
-                    'x': 1253,
-                    'y': 1243,
-                }, {
-                    'name': 'nebular',
-                    'type': 'nebular',
-                    'x': 1254,
-                    'y': 1243,
-                }
-            ]
-
             var planets = data.filter(function(elem){return elem.type=='planet'})
             var misc = data.filter(function(elem){
                 var miscTypes = ['station', 'debris', 'asteroids', 'mines', 'nebular'];
                 return (miscTypes.indexOf(elem.type) > -1);
             })
-
-            //map.append(createGridSVGDom(direction));
 
             switch (direction) {
                 case 'north-east':
@@ -308,7 +343,7 @@ $(document).ready( function() {
             // now draw planets and co
             for (var i=0; i<planets.length; i++) {
                 var params = {
-                    title: planets[i]['name'],
+                    title: planets[i]['name']+'('+planets[i]['x']+','+planets[i]['y']+')',
                     cx: parseInt(planets[i]['x']) % 50*10+5,
                     cy: parseInt(planets[i]['y']) % 50*10+5,
                     r: 5,
@@ -339,10 +374,15 @@ $(document).ready( function() {
 
             targetDomElement.appendChild(group);
         },
-        addSystem: function(direction) {
+        addSystems: function(direction) {
             var map = $('.ngm');
+
             if (direction == 'east') {
+
                 $('.grid-svg').animate({marginLeft: "-=500px"}, 500);
+                ngm.coordx = ngm.coordx+50;
+                console.log('new center xy:', ngm.coordx, ngm.coordy);
+
                 setTimeout(function() {
                     // delete west
                     $('.grid-west').remove();
@@ -361,14 +401,26 @@ $(document).ready( function() {
                         elements[i].setAttribute('class', newclass);
                     }
                     // create new
-                    map.append(createGridSVGDom('north-east'));
-                    map.append(createGridSVGDom('east'));
-                    map.append(createGridSVGDom('south-east'));
+                    data = ngm.loadDataByCoords(ngm.coordx, ngm.coordy)
+
+                    data_north_east = extractDataByCoordLimits(data, [ngm.coordx+25,ngm.coordy-75], [ngm.coordx+75,ngm.coordy-25]);
+                    data_east       = extractDataByCoordLimits(data, [ngm.coordx+25,ngm.coordy-25], [ngm.coordx+75,ngm.coordy+25]);
+                    data_south_east = extractDataByCoordLimits(data, [ngm.coordx+25,ngm.coordy+25], [ngm.coordx+75,ngm.coordy+75]);
+
+                    map.append(ngm.createGridSVGDom('north-east'));
+                    ngm.fillWithContent('north-east', data_north_east);
+                    map.append(ngm.createGridSVGDom('east'));
+                    ngm.fillWithContent('east', data_east);
+                    map.append(ngm.createGridSVGDom('south-east'));
+                    ngm.fillWithContent('south-east', data_south_east);
 
                 }, 500);
+
             } else if (direction == 'west') {
 
                 $('.grid-svg').animate({marginLeft: "+=500px"}, 500);
+                ngm.coordx = ngm.coordx-50;
+                console.log('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {
                     // delete east
                     $('.grid-east').remove();
@@ -386,13 +438,28 @@ $(document).ready( function() {
                         var newclass = oldclass.replace('grid-west', '').replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
-                    map.append(createGridSVGDom('north-west'));
-                    map.append(createGridSVGDom('west'));
-                    map.append(createGridSVGDom('south-west'));
+
+                    // create new
+                    data = ngm.loadDataByCoords(ngm.coordx, ngm.coordy)
+
+                    data_north_west = extractDataByCoordLimits(data, [ngm.coordx-75,ngm.coordy-75], [ngm.coordx-25,ngm.coordy-25]);
+                    data_west       = extractDataByCoordLimits(data, [ngm.coordx-75,ngm.coordy-25], [ngm.coordx-25,ngm.coordy+25]);
+                    data_south_west = extractDataByCoordLimits(data, [ngm.coordx-75,ngm.coordy+25], [ngm.coordx-25,ngm.coordy+75]);
+
+                    map.append(ngm.createGridSVGDom('north-west'));
+                    ngm.fillWithContent('north-west', data_north_west);
+                    map.append(ngm.createGridSVGDom('west'));
+                    ngm.fillWithContent('west', data_west);
+                    map.append(ngm.createGridSVGDom('south-west'));
+                    ngm.fillWithContent('south-west', data_south_west);
 
                 }, 500);
+
             } else if (direction == 'north') {
+
                 $('.grid-svg').animate({marginTop: "+=500px"}, 500);
+                ngm.coordy = ngm.coordy-50;
+                console.log('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {
                     // delete south
                     $('.grid-south').remove();
@@ -411,12 +478,27 @@ $(document).ready( function() {
                         var newclass = oldclass.replace('grid-north', '').replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
-                    map.append(createGridSVGDom('north-west'));
-                    map.append(createGridSVGDom('north'));
-                    map.append(createGridSVGDom('north-east'));
+
+                    // create new
+                    data = ngm.loadDataByCoords(ngm.coordx, ngm.coordy)
+
+                    data_north_west = extractDataByCoordLimits(data, [ngm.coordx-75,ngm.coordy-75], [ngm.coordx-25,ngm.coordy-25]);
+                    data_north      = extractDataByCoordLimits(data, [ngm.coordx-25,ngm.coordy-75], [ngm.coordx+25,ngm.coordy-25]);
+                    data_north_east = extractDataByCoordLimits(data, [ngm.coordx+25,ngm.coordy-75], [ngm.coordx+75,ngm.coordy-25]);
+
+                    map.append(ngm.createGridSVGDom('north-west'));
+                    ngm.fillWithContent('north-west', data_north_west);
+                    map.append(ngm.createGridSVGDom('north'));
+                    ngm.fillWithContent('north', data_north);
+                    map.append(ngm.createGridSVGDom('north-east'));
+                    ngm.fillWithContent('north-east', data_north_east);
                 }, 500);
+
             } else if (direction == 'south') {
+
                 $('.grid-svg').animate({marginTop: "-=500px"}, 500);
+                ngm.coordy = ngm.coordy+50;
+                console.log('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {
                     // delete north
                     $('.grid-north').remove();
@@ -435,9 +517,20 @@ $(document).ready( function() {
                         var newclass = oldclass.replace('grid-south', '').replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
-                    map.append(createGridSVGDom('south-west'));
-                    map.append(createGridSVGDom('south'));
-                    map.append(createGridSVGDom('south-east'));
+
+                    // create new
+                    data = ngm.loadDataByCoords(ngm.coordx, ngm.coordy)
+
+                    data_south_west = extractDataByCoordLimits(data, [ngm.coordx-75,ngm.coordy+25], [ngm.coordx-25,ngm.coordy+75]);
+                    data_south      = extractDataByCoordLimits(data, [ngm.coordx-25,ngm.coordy+25], [ngm.coordx+25,ngm.coordy+75]);
+                    data_south_east = extractDataByCoordLimits(data, [ngm.coordx+25,ngm.coordy+25], [ngm.coordx+75,ngm.coordy+75]);
+
+                    map.append(ngm.createGridSVGDom('south-west'));
+                    ngm.fillWithContent('south-west', data_south_west);
+                    map.append(ngm.createGridSVGDom('south'));
+                    ngm.fillWithContent('south', data_south);
+                    map.append(ngm.createGridSVGDom('south-east'));
+                    ngm.fillWithContent('south-east', data_south_east);
                 }, 500);
             }
         },

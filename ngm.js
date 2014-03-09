@@ -137,7 +137,7 @@ $(document).ready( function() {
                 {'name': 'ne-test', 'type': 'planet', 'x': 1251, 'y': 1199},
 
                 // west
-                {'name': 'west-test', 'type': 'planet', 'x': 1255, 'y': 1225},
+                {'name': 'west-test', 'type': 'planet', 'x': 1195, 'y': 1225},
 
                 // center
                 {'name': 'test', 'type': 'planet', 'x': 1210, 'y': 1222},
@@ -149,10 +149,11 @@ $(document).ready( function() {
                 {'name': 'a station', 'type': 'station', 'x': 1230, 'y': 1210},
 
                 // east
+                {'name': 'east-test', 'type': 'planet', 'x': 1254, 'y': 1217},
                 {'name': 'debris field', 'type': 'debris', 'x': 1251, 'y': 1243},
-                {'name': 'asteroid field', 'type': 'asteroids', 'x': 1252, 'y': 1243},
-                {'name': 'mine field', 'type': 'mines', 'x': 1253, 'y': 1243},
-                {'name': 'nebular', 'type': 'nebular', 'x': 1254, 'y': 1243},
+                {'name': 'asteroid field', 'type': 'asteroids', 'x': 1253, 'y': 1243},
+                {'name': 'mine field', 'type': 'mines', 'x': 1253, 'y': 1245},
+                {'name': 'nebular', 'type': 'nebular', 'x': 1254, 'y': 1247},
 
                 // south-west
                 {'name': 'south-west test', 'type': 'planet', 'x': 1199, 'y': 1251},

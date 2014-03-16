@@ -8,7 +8,10 @@
     <link href="ngm.css" rel="stylesheet">
   </head>
   <body>
-    <div class="ngm" data-width="700px" data-height="700px"></div>
+
+    <div style="margin-left:50px;margin-top:50px;height:765px;width:765px;position:relative;">
+        <div class="ngm"></div>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!--<script src="https://code.jquery.com/jquery.js"></script>-->
@@ -18,7 +21,20 @@
     <script src="ngm.js"></script>
     <script>
         $(document).ready( function() {
-            ngm.init('.ngm', 1225, 1225, 5);
+            ngm.init({
+                'selector': '.ngm',
+                'width': '1000px',
+                'height': '1000px',
+                'center' : [1225, 1225],
+                'scale' : 10, // pix width of one field unit
+                'range' : 50,
+                'layers': [
+                    {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
+                    {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},
+                    {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square'},
+                    {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
+                ]
+            });
         })
     </script>
   </body>

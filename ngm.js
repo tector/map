@@ -130,53 +130,22 @@ $(document).ready( function() {
         },
         loadMapDataInArea: function(xymin, xymax) {
             // currently use of dummy data
-            // TODO: data should be loaded by ajax request
-/*            var result = $.getJSON( "file:///D:/htdocs/nouron_galaxy_map/dummydata.json");
+            var data = (function () {
+                var json = null;
+                $.ajax({
+                    dataType: 'jsonp',
+                    jsonp: 'jsonp_callback',
+                    'async': false,
+                    'global': false,
+                    'url': sprintf(ngm.dataSourceUri, xymin, xymax),
+                    'dataType': "json",
+                    'success': function (data) {
+                        json = data;
+                    }
+                });
+                return json;
+            })();
 
-            console.log(result.responseJSON);
-            data = result.responseJSON;
-            console.log(data);*/
-
-/*            data = $.ajax({
-              dataType: 'jsonp',
-              //data: 'id=10',
-              jsonp: 'jsonp_callback',
-              url: "file:///D:/htdocs/nouron_galaxy_map/dummydata.json",//"http://tector.github.io/ngm/dummydata.json",
-              success: function (t) {
-                tmp = t['data'];
-              }
-            });*/
-
-            data = [
-                // north-west
-                {'layer': 1, 'x': 1199, 'y': 1199, 'attribs':{'title':'nw-test', 'class': 'planet'}},
-                // north
-                {'layer': 1, 'x':1225, 'y':1195, 'attribs':{'title':'north-test', 'class': 'planet'}},
-                // north-east
-                {'layer': 1, 'x': 1251, 'y': 1199, 'attribs':{'title':'ne-test', 'class': 'planet'}},
-                // west
-                {'layer': 1, 'x': 1195, 'y': 1225, 'attribs':{'title':'west-test', 'class': 'planet'}},
-                // center
-                {'layer': 1, 'x': 1210, 'y': 1222, 'attribs':{'title':'test', 'class': 'planet'}},
-                {'layer': 1, 'x': 1211, 'y': 1222, 'attribs':{'title':'test', 'class': 'planet'}},
-                {'layer': 1, 'x': 1212, 'y': 1222, 'attribs':{'title':'test', 'class': 'planet'}},
-                {'layer': 1, 'x': 1213, 'y': 1222, 'attribs':{'title':'test', 'class': 'planet'}},
-                {'layer': 1, 'x': 1214, 'y': 1222, 'attribs':{'title':'test', 'class': 'planet'}},
-                {'layer': 1, 'x': 1234, 'y': 1234, 'attribs':{'title':'test2', 'class': 'planet'}},
-                {'layer': 2, 'x': 1230, 'y': 1210, 'attribs':{'title':'a station', 'class': 'station'}},
-                // east
-                {'layer': 1, 'x': 1254, 'y': 1217, 'attribs':{'title':'east-test', 'class': 'planet'}},
-                {'layer': 0, 'x': 1251, 'y': 1243, 'attribs':{'title':'debris field', 'class': 'debris'}},
-                {'layer': 0, 'x': 1253, 'y': 1243, 'attribs':{'title':'asteroid field', 'class': 'asteroids'}},
-                {'layer': 0, 'x': 1253, 'y': 1245, 'attribs':{'title':'mine field', 'class': 'mines'}},
-                {'layer': 0, 'x': 1254, 'y': 1247, 'attribs':{'title':'nebular', 'class': 'nebular'}},
-                // south-west
-                {'layer': 1, 'x': 1199, 'y': 1251, 'attribs':{'title':'south-west test', 'class': 'planet'}},
-                // south
-                {'layer': 1, 'x': 1225, 'y':1255, 'attribs':{'title':'south test', 'class': 'planet'}},
-                // south-east
-                {'layer': 1, 'x': 1255, 'y': 1255, 'attribs':{'title':'south-east test', 'class': 'planet'}},
-            ]
             return data.filter(function(el){
                 return (el.y >= xymin[1] && el.y < xymax[1]
                     && el.x >= xymin[0] && el.x < xymax[0]);
@@ -219,6 +188,7 @@ $(document).ready( function() {
          * @param config: array of configuration options
          */
         init: function(config) {
+            ngm.dataSourceUri = config['dataSourceUri'];
             ngm.selector = config['selector'];
             ngm.width  = config['width'];
             ngm.height = config['height'];

@@ -10,7 +10,7 @@
   <body>
 
     <div style="margin-left:50px;margin-top:50px;height:765px;width:765px;position:relative;">
-        <div class="ngm"></div>
+        <div id="ngm-map" class="ngm"></div>
     </div>
 
     <!--<script src="https://code.jquery.com/jquery.js"></script>-->
@@ -20,7 +20,7 @@
         $(document).ready( function() {
             ngm.init({
                 'dataSourceUri': "./dummydata.json",
-                'selector': '.ngm',
+                'selector': '#ngm-map',
                 'width': '700px',
                 'height': '700px',
                 'center' : [1225, 1225],

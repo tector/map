@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nouron Galaxy Map Test</title>
+    <link href="ngm.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div style="margin-left:50px;margin-top:50px;height:865px;width:900px;position:relative;">
+        <div id="ngm" class="ngm"></div>
+        <div id="ngm-editor"></div>
+    </div>
+
+    <!--<script src="https://code.jquery.com/jquery.js"></script>-->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="ngm.js"></script>
+    <script src="ngm-editor.js"></script>
+    <script>
+        $(document).ready( function() {
+            layers = [
+                {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
+                {'name': 'buildings', 'class': 'ngm-buildings-layer', 'objectDefaultShape': 'square'},
+                {'name': 'streets', 'class': 'ngm-streets-layer', 'objectDefaultShape': 'square'},
+            ];
+
+            ngm.init({
+                'dataSourceUri': "./dummydata.json",
+                'mode': 'editor',
+                'selector': '#ngm',
+                'width': '700px',
+                'height': '700px',
+                'center' : [0, 0],
+                'scale' : 50, // pix width of one field unit
+                'range' : 10,
+                'layers': layers
+            });
+
+            ngm_editor.init({
+                'dataSourceUri': "./dummydata-editor.json",
+                'selector': '#ngm-editor',
+                'layers': layers
+            });
+        })
+    </script>
+  </body>
+</html>

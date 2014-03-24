@@ -60,13 +60,18 @@ $(document).ready( function() {
             return '['+x+','+y+',0]';
         },
 
+        addObjectToSVGDom: function() {
+            var tpl = '<svg class="grid-svg %s" width="%spx" height="%spx" style="margin-left: %spx; margin-top: %spx;"></svg>';
+
+        },
+
         /**
          * create a new svg dom element and position it in the right direction
          *
          * @param direction north|east|south|west
          */
         createGridSVGDom: function(direction) {
-            var tpl = '<svg class="grid-svg %s" width="%spx" height="%spx" style="margin-left: %spx; margin-top: %spx;"></svg>'
+            var tpl = '<svg class="grid-svg %s" width="%spx" height="%spx" style="margin-left: %spx; margin-top: %spx;"></svg>';
             var width  = ngm.range * ngm.scale;
             var height = ngm.range * ngm.scale;
 
@@ -128,6 +133,7 @@ $(document).ready( function() {
         setNewCenterCoords: function(coordx, coordy) {
             // TODO: complete reload of all SVG maps with new coords as center
         },
+
         loadMapDataInArea: function(xymin, xymax) {
             // currently use of dummy data
             var data = (function () {
@@ -188,7 +194,9 @@ $(document).ready( function() {
          * @param config: array of configuration options
          */
         init: function(config) {
+            ngm.editorDataSourceUri = config['editorDataSourceUri'];
             ngm.dataSourceUri = config['dataSourceUri'];
+            ngm.mode = config['mode'];
             ngm.selector = config['selector'];
             ngm.width  = config['width'];
             ngm.height = config['height'];
@@ -277,7 +285,6 @@ $(document).ready( function() {
                 coords = ngm.toggleSelect(e);
                 console.log(coords);
             });
-
         },
         /**
          *
@@ -394,7 +401,9 @@ $(document).ready( function() {
                         'cy': parseInt(layerObjects[i]['y']) % ngm.range*ngm.scale+r,
                         'r':  r,
                         'fill': '#9999bb',
-                        'class': attribs['class']
+                        'class': attribs['class'],
+                        'data-x': layerObjects[i]['x'],
+                        'data-y': layerObjects[i]['y']
                     }
                     group.appendChild(makeSVG('circle', params));
                 }
@@ -408,7 +417,9 @@ $(document).ready( function() {
                         'width': ngm.scale,
                         'height': ngm.scale,
                         'fill': 'grey',
-                        'class': attribs['class']
+                        'class': attribs['class'],
+                        'data-x': layerObjects[i]['x'],
+                        'data-y': layerObjects[i]['y']
                     }
                     group.appendChild(makeSVG('rect', params));
                 }
@@ -583,8 +594,26 @@ $(document).ready( function() {
         },
         removeSystem: function(direction) {
 
-        }
+        },
 
+        exportMap: function() {
+            var objects_data = []
+            $('.ngm svg g').children().each(function(i, item){
+                var layer_class = $(this).parent().attr('class');
+                if (this.tagName == 'rect' || this.tagName == 'circle') {
+                    var object_data = {
+                        'attr': {
+                            'class' : $(this).attr('class'),
+                            'title' : $(this).attr('title')
+                        },
+                        'x' : $(this).data('x'),
+                        'y' : $(this).data('y')
+                    }
+                    objects_data.push(object_data);
+                }
+            });
+            return objects_data;
+        }
     }
 
 });

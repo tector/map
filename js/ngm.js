@@ -385,40 +385,38 @@ $(document).ready( function() {
          * @param layerObjects
          */
         drawLayerObjects: function(targetDomElement, layerConfig, layerObjects){
-            var group = makeSVG('g', {'class': layerConfig['class']});
-            if (layerConfig['objectDefaultShape'] == 'circle') {
+            var group = makeSVG('g', {'class': layerConfig.class});
+            if (layerConfig.objectDefaultShape == 'circle') {
                 for (var i=0; i<layerObjects.length; i++) {
                     var r = Math.floor(ngm.scale/2);
-                    var attribs = layerObjects[i]['attribs'];
-                    var params = {
-                        'title': attribs['title']+'('+layerObjects[i]['x']+','+layerObjects[i]['y']+')',
-                        'cx': parseInt(layerObjects[i]['x']) % ngm.range*ngm.scale+r,
-                        'cy': parseInt(layerObjects[i]['y']) % ngm.range*ngm.scale+r,
+                    var attribs = layerObjects[i].attribs;
+                    group.appendChild(makeSVG('circle', {
+                        'title': attribs.title+'('+layerObjects[i].x+','+layerObjects[i].y+')',
+                        'cx': parseInt(layerObjects[i].x) % ngm.range*ngm.scale+r,
+                        'cy': parseInt(layerObjects[i].y) % ngm.range*ngm.scale+r,
                         'r':  r,
                         'fill': 'transparent',
                         'stroke-width': '1',
                         'stroke': "#999",
-                        'class': attribs['class'],
-                        'data-x': layerObjects[i]['x'],
-                        'data-y': layerObjects[i]['y']
-                    }
-                    group.appendChild(makeSVG('circle', params));
+                        'class': attribs.class,
+                        'data-x': layerObjects[i].x,
+                        'data-y': layerObjects[i].y
+                    }));
                 }
             } else {
                 for (var i=0; i<layerObjects.length; i++) {
-                    var attribs = layerObjects[i]['attribs'];
-                    var params = {
-                        'title': attribs['title'],
-                        'x': parseInt(layerObjects[i]['x']) % ngm.range*ngm.scale,
-                        'y': parseInt(layerObjects[i]['y']) % ngm.range*ngm.scale,
+                    var attribs = layerObjects[i].attribs;
+                    group.appendChild(makeSVG('rect', {
+                        'title': attribs.title,
+                        'x': parseInt(layerObjects[i].x) % ngm.range*ngm.scale,
+                        'y': parseInt(layerObjects[i].y) % ngm.range*ngm.scale,
                         'width': ngm.scale,
                         'height': ngm.scale,
                         'fill': 'grey',
-                        'class': attribs['class'],
-                        'data-x': layerObjects[i]['x'],
-                        'data-y': layerObjects[i]['y']
-                    }
-                    group.appendChild(makeSVG('rect', params));
+                        'class': attribs.class,
+                        'data-x': layerObjects[i].x,
+                        'data-y': layerObjects[i].y
+                    }));
                 }
             }
             targetDomElement.appendChild(group);
@@ -443,17 +441,17 @@ $(document).ready( function() {
                     // delete west
                     $('.grid-west').remove();
                     // center -> west
-                    var elements = document.querySelectorAll('.grid-svg:not(.grid-west):not(.grid-east)');
+                    elements = document.querySelectorAll('.grid-svg:not(.grid-west):not(.grid-east)');
                     for (var i=0; i<elements.length; i++) {
-                        var oldclass = elements[i].getAttribute('class');
-                        var newclass = oldclass + ' grid-west';
+                        oldclass = elements[i].getAttribute('class');
+                        newclass = oldclass + ' grid-west';
                         elements[i].setAttribute('class', newclass);
                     }
                     // east -> center
-                    var elements = document.querySelectorAll('.grid-east');
+                    elements = document.querySelectorAll('.grid-east');
                     for (var i=0; i<elements.length; i++) {
-                        var oldclass = elements[i].getAttribute('class');
-                        var newclass = oldclass.replace('grid-east', '')
+                        oldclass = elements[i].getAttribute('class');
+                        newclass = oldclass.replace('grid-east', '')
                                                .replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
@@ -481,17 +479,17 @@ $(document).ready( function() {
                     // delete east
                     $('.grid-east').remove();
                     // center -> east
-                    var elements = document.querySelectorAll('.grid-svg:not(.grid-west):not(.grid-east)');
-                    for (var i=0; i<elements.length; i++) {
-                        var oldclass = elements[i].getAttribute('class');
-                        var newclass = oldclass + ' grid-east';
+                    elements = document.querySelectorAll('.grid-svg:not(.grid-west):not(.grid-east)');
+                    for (i=0; i<elements.length; i++) {
+                        oldclass = elements[i].getAttribute('class');
+                        newclass = oldclass + ' grid-east';
                         elements[i].setAttribute('class', newclass);
                     }
                     // west -> center
-                    var elements = document.querySelectorAll('.grid-west');
-                    for (var i=0; i<elements.length; i++) {
-                        var oldclass = elements[i].getAttribute('class');
-                        var newclass = oldclass.replace('grid-west', '')
+                    elements = document.querySelectorAll('.grid-west');
+                    for (i=0; i<elements.length; i++) {
+                        oldclass = elements[i].getAttribute('class');
+                        newclass = oldclass.replace('grid-west', '')
                                                .replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
@@ -521,17 +519,17 @@ $(document).ready( function() {
                     $('.grid-south').remove();
 
                     // center -> south
-                    var elements = document.querySelectorAll('.grid-svg:not(.grid-north):not(.grid-south)');
-                    for (var i=0; i<elements.length; i++) {
-                        var oldclass = elements[i].getAttribute('class');
-                        var newclass = oldclass + ' grid-south';
+                    elements = document.querySelectorAll('.grid-svg:not(.grid-north):not(.grid-south)');
+                    for (i=0; i<elements.length; i++) {
+                        oldclass = elements[i].getAttribute('class');
+                        newclass = oldclass + ' grid-south';
                         elements[i].setAttribute('class', newclass);
                     }
                     // north -> center
-                    var elements = document.querySelectorAll('.grid-north');
-                    for (var i=0; i<elements.length; i++) {
-                        var oldclass = elements[i].getAttribute('class');
-                        var newclass = oldclass.replace('grid-north', '')
+                    elements = document.querySelectorAll('.grid-north');
+                    for (i=0; i<elements.length; i++) {
+                        oldclass = elements[i].getAttribute('class');
+                        newclass = oldclass.replace('grid-north', '')
                                                .replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
@@ -560,17 +558,17 @@ $(document).ready( function() {
                     $('.grid-north').remove();
 
                     // center -> north
-                    var elements = document.querySelectorAll('.grid-svg:not(.grid-north):not(.grid-south)');
-                    for (var i=0; i<elements.length; i++) {
-                        var oldclass = elements[i].getAttribute('class');
-                        var newclass = oldclass + ' grid-north';
+                    elements = document.querySelectorAll('.grid-svg:not(.grid-north):not(.grid-south)');
+                    for (i=0; i<elements.length; i++) {
+                        oldclass = elements[i].getAttribute('class');
+                        newclass = oldclass + ' grid-north';
                         elements[i].setAttribute('class', newclass);
                     }
                     // south -> center
-                    var elements = document.querySelectorAll('.grid-south');
-                    for (var i=0; i<elements.length; i++) {
-                        var oldclass = elements[i].getAttribute('class');
-                        var newclass = oldclass.replace('grid-south', '')
+                    elements = document.querySelectorAll('.grid-south');
+                    for (i=0; i<elements.length; i++) {
+                        oldclass = elements[i].getAttribute('class');
+                        newclass = oldclass.replace('grid-south', '')
                                                .replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
@@ -598,15 +596,14 @@ $(document).ready( function() {
             $('.ngm svg g').children().each(function(i, item){
                 var layer_class = $(this).parent().attr('class');
                 if (this.tagName == 'rect' || this.tagName == 'circle') {
-                    var object_data = {
+                    objects_data.push({
                         'attr': {
                             'class' : $(this).attr('class'),
                             'title' : $(this).attr('title')
                         },
                         'x' : $(this).data('x'),
                         'y' : $(this).data('y')
-                    }
-                    objects_data.push(object_data);
+                    });
                 }
             });
             return objects_data;

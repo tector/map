@@ -1,0 +1,5 @@
+filter:
+    excluded_paths:
+        - js/
+tools:
+    js_hint: true

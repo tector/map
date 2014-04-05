@@ -1,0 +1,26 @@
+[{"layer": 1, "attribs":{"class": "planet planetary_type_jungle", "image": "img/1.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_ice", "image": "img/2.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_desert", "image": "img/3.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_earth", "image": "img/4.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_crater", "image": "img/5.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_vulcano", "image": "img/7.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_gasgiant", "image": "img/11.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_water", "image": "img/8.png"}},
+{"layer": 1, "attribs":{"class": "planet"}},
+{"layer": 1, "attribs":{"class": "planet"}},
+{"layer": 2, "attribs":{"class": "station"}},
+{"layer": 1, "attribs":{"class": "planet"}},
+{"layer": 0, "attribs":{"class": "debris planetary_type_shipgraveyard", "image": "img/p_grey.png"}},
+{"layer": 0, "attribs":{"class": "asteroids planetary_type_asteroidfield", "image": "img/field_asteroids.png"}},
+{"layer": 0, "attribs":{"class": "mines planetary_type_minefield", "image": "img/10.png"}},
+{"layer": 0, "attribs":{"class": "nebular planetary_type_nebular", "image": "img/p_grey.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_rockgiant", "image": "img/p_grey.png"}},
+{"layer": 1, "attribs":{"class": "planet planetary_type_icegiant", "image": "img/p_white.png"}},
+{"layer": 1, "attribs":{"class": "planet"}}]
+
+
+
+
+
+
+

@@ -2,7 +2,7 @@ $(document).ready( function() {
 
     function makeSVG(tag, attribs, value)
     {
-        if (attribs == null) {
+        if (attribs === null) {
             attribs = {};
         }
 
@@ -21,7 +21,7 @@ $(document).ready( function() {
     function sprintf(format, etc) {
         var arg = arguments;
         var i = 1;
-        return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++] })
+        return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++] });
     }
 
     ngm = {
@@ -123,6 +123,7 @@ $(document).ready( function() {
                     class_ = '';
                     margin_left = -halfwidth;
                     margint_top = -halfheight;
+                    break;
                 default:
                     break;
             }
@@ -139,12 +140,10 @@ $(document).ready( function() {
             var data = (function () {
                 var json = null;
                 $.ajax({
-                    dataType: 'jsonp',
-                    jsonp: 'jsonp_callback',
+                    'dataType': 'json',
                     'async': false,
                     'global': false,
                     'url': sprintf(ngm.dataSourceUri, xymin, xymax),
-                    'dataType': "json",
                     'success': function (data) {
                         json = data;
                     }
@@ -153,8 +152,8 @@ $(document).ready( function() {
             })();
 
             return data.filter(function(el){
-                return (el.y >= xymin[1] && el.y < xymax[1]
-                    && el.x >= xymin[0] && el.x < xymax[0]);
+                return (el.y >= xymin[1] && el.y < xymax[1] &&
+                        el.x >= xymin[0] && el.x < xymax[0]);
             });
         },
 
@@ -179,7 +178,7 @@ $(document).ready( function() {
          * @param {number} coordy
          * @return array
          */
-        loadMapDataByCoords: function(coordx, coordy, initfullmap = false) {
+        loadMapDataByCoords: function(coordx, coordy, initfullmap) {
             if (initfullmap == true) {
                 data = ngm.loadMapDataInArea([coordx-ngm.range*1.5, coordy-ngm.range*1.5], [coordx+ngm.range*1.5,coordy+ngm.range*1.5]);
             } else {
@@ -194,17 +193,16 @@ $(document).ready( function() {
          * @param config: array of configuration options
          */
         init: function(config) {
-            ngm.editorDataSourceUri = config['editorDataSourceUri'];
-            ngm.dataSourceUri = config['dataSourceUri'];
-            ngm.mode = config['mode'];
-            ngm.selector = config['selector'];
-            ngm.width  = config['width'];
-            ngm.height = config['height'];
-            ngm.coordx = config['center'][0];
-            ngm.coordy = config['center'][1];
-            ngm.scale = parseInt(config['scale']);
-            ngm.range = parseInt(config['range']);
-            ngm.layers = config['layers'];
+            ngm.dataSourceUri = config.dataSourceUri;
+            ngm.mode = config.mode;
+            ngm.selector = config.selector;
+            ngm.width  = config.width;
+            ngm.height = config.height;
+            ngm.coordx = config.center[0];
+            ngm.coordy = config.center[1];
+            ngm.scale = parseInt(config.scale);
+            ngm.range = parseInt(config.range);
+            ngm.layers = config.layers;
             var map = $(ngm.selector);
 
             map.attr('style', 'width:'+ngm.width+';height:'+ngm.height+';position:absolute');
@@ -254,29 +252,30 @@ $(document).ready( function() {
                 switch (id) {
                     case 'push-east':
                         $(ngm.selector + ' .grid-svg').each(function(){
-                            var left = parseInt($(this).css('margin-left').replace('px', ''));
+                            left = parseInt($(this).css('margin-left').replace('px', ''));
                         });
                         ngm.addSystems('east');
                         break;
                     case 'push-west':
                         $(ngm.selector + ' .grid-svg').each(function(){
-                            var left = parseInt($(this).css('margin-left').replace('px', ''));
+                            left = parseInt($(this).css('margin-left').replace('px', ''));
                         });
                         ngm.addSystems('west');
                         break;
                     case 'push-north':
                         $(ngm.selector + ' .grid-svg').each(function(){
-                            var top = parseInt($(this).css('margin-top').replace('px', ''));
+                            top = parseInt($(this).css('margin-top').replace('px', ''));
                         });
                         ngm.addSystems('north');
                         break;
                     case 'push-south':
                         $(ngm.selector + ' .grid-svg').each(function(){
-                            var top = parseInt($(this).css('margin-top').replace('px', ''));
+                            top = parseInt($(this).css('margin-top').replace('px', ''));
                         });
                         ngm.addSystems('south');
                         break;
                     default:
+                        throw "invalid push direction";
                         break;
                 }
             });
@@ -295,39 +294,41 @@ $(document).ready( function() {
 
             switch (direction) {
                 case 'north-east':
-                    var targetsvg = $('.grid-north.grid-east');
+                    targetsvg = $('.grid-north.grid-east');
                     break;
                 case 'east':
-                    var targetsvg = $('.grid-east').not('.grid-north')
-                                                   .not('.grid-south');
+                    targetsvg = $('.grid-east').not('.grid-north')
+                                                .not('.grid-south');
                     break;
                 case 'south-east':
-                    var targetsvg = $('.grid-south.grid-east');
+                    targetsvg = $('.grid-south.grid-east');
                     break;
                 case 'north-west':
-                    var targetsvg = $('.grid-north.grid-west');
+                    targetsvg = $('.grid-north.grid-west');
                     break;
                 case 'west':
-                    var targetsvg = $('.grid-west').not('.grid-north')
-                                                   .not('.grid-south');
+                    targetsvg = $('.grid-west').not('.grid-north')
+                                                .not('.grid-south');
                     break;
                 case 'south-west':
-                    var targetsvg = $('.grid-south.grid-west');
+                    targetsvg = $('.grid-south.grid-west');
                     break;
                 case 'north':
-                    var targetsvg = $('.grid-north').not('.grid-west')
-                                                    .not('.grid-east');
+                    targetsvg = $('.grid-north').not('.grid-west')
+                                                .not('.grid-east');
                     break;
                 case 'south':
-                    var targetsvg = $('.grid-south').not('.grid-west')
+                    targetsvg = $('.grid-south').not('.grid-west')
                                                     .not('.grid-east');
                     break;
                 case 'center':
-                    var targetsvg = $('.grid-svg').not('.grid-north')
-                                                .not('.grid-east')
-                                                .not('.grid-south')
-                                                .not('.grid-west');
+                    targetsvg = $('.grid-svg').not('.grid-north')
+                                              .not('.grid-east')
+                                              .not('.grid-south')
+                                              .not('.grid-west');
+                    break;
                 default:
+                    throw "invalid direction given";
                     break;
             }
 
@@ -335,7 +336,7 @@ $(document).ready( function() {
             var test = ngm.layers;
 
             for (i=0; i<ngm.layers.length; i++) {
-                var objects = data.filter(function(elem){return elem.layer==i})
+                var objects = data.filter(function(elem){return elem.layer==i});
                 ngm.drawLayerObjects(targetsvg[0], ngm.layers[i], objects);
             }
         },
@@ -344,15 +345,13 @@ $(document).ready( function() {
          *
          * @param targetDomElement  svg dom element to draw inside
          */
-        drawGrid: function(targetDomElement)
-        {
+        drawGrid: function(targetDomElement) {
             max = Math.floor(ngm.range/10) * ngm.scale;
 
             // horizontal lines
             var group = makeSVG('g', {'class': 'ngm-grid-layer'});
-            for (var i=0; i<10; i++)
-            {
-                var params = {
+            for (var i=0; i<10; i++) {
+                group.appendChild(makeSVG('line', {
                     x1: 0,
                     y1: i*max,
                     x2: ngm.range*ngm.scale,
@@ -360,14 +359,12 @@ $(document).ready( function() {
                     stroke: '#222222',
                     'stroke-width': '1px',
                     'fill-opacity':'0'
-                };
-                group.appendChild(makeSVG('line', params));
+                }));
             }
 
             // vertical lines
-            for (var j=0; j<10; j++)
-            {
-                var params = {
+            for (var j=0; j<10; j++) {
+                group.appendChild(makeSVG('line', {
                     x1: j*max,
                     y1: 0,
                     x2: j*max,
@@ -375,8 +372,7 @@ $(document).ready( function() {
                     stroke: '#222222',
                     'stroke-width': '1px',
                     'fill-opacity':'0'
-                };
-                group.appendChild(makeSVG('line', params));
+                }));
             }
 
             targetDomElement.appendChild(group);
@@ -388,8 +384,7 @@ $(document).ready( function() {
          * @param layerConfig
          * @param layerObjects
          */
-        drawLayerObjects: function(targetDomElement, layerConfig, layerObjects)
-        {
+        drawLayerObjects: function(targetDomElement, layerConfig, layerObjects){
             var group = makeSVG('g', {'class': layerConfig['class']});
             if (layerConfig['objectDefaultShape'] == 'circle') {
                 for (var i=0; i<layerObjects.length; i++) {
@@ -400,7 +395,9 @@ $(document).ready( function() {
                         'cx': parseInt(layerObjects[i]['x']) % ngm.range*ngm.scale+r,
                         'cy': parseInt(layerObjects[i]['y']) % ngm.range*ngm.scale+r,
                         'r':  r,
-                        'fill': '#9999bb',
+                        'fill': 'transparent',
+                        'stroke-width': '1',
+                        'stroke': "#999",
                         'class': attribs['class'],
                         'data-x': layerObjects[i]['x'],
                         'data-y': layerObjects[i]['y']

@@ -45,3 +45,6 @@ html, body {
 #ngm-editor .object:hover {cursor: pointer;}
 
 #ngm-editor .object.selected{outline:2px solid red;}
+
+.planet {background-repeat:no-repeat;background-size: 100%;}
+.planetary-1 {background-image: url(planetaries/1.png);}

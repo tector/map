@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nouron Galaxy Map Test</title>
-    <link href="ngm.css" rel="stylesheet">
+    <link href="css/ngm.css" rel="stylesheet">
   </head>
   <body>
 
@@ -13,13 +13,12 @@
         <div id="ngm-map" class="ngm"></div>
     </div>
 
-    <!--<script src="https://code.jquery.com/jquery.js"></script>-->
-    <script src="js/jquery-1.11.0.min.js"></script>
-    <script src="ngm.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="js/ngm.js"></script>
     <script>
         $(document).ready( function() {
             ngm.init({
-                'dataSourceUri': "./dummydata.json",
+                'dataSourceUri': "./data/dummydata.json",
                 'selector': '#ngm-map',
                 'width': '700px',
                 'height': '700px',

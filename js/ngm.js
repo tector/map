@@ -136,14 +136,16 @@ $(document).ready( function() {
         },
 
         loadMapDataInArea: function(xymin, xymax) {
-            // currently use of dummy data
+            // currently use of dummy data (only works in firefox!)
+            // TODO: make this work with real source data!
             var data = (function () {
                 var json = null;
                 $.ajax({
-                    'dataType': 'json',
+                    jsonp: 'jsonp_callback',
                     'async': false,
                     'global': false,
                     'url': sprintf(ngm.dataSourceUri, xymin, xymax),
+                    'dataType': "json",
                     'success': function (data) {
                         json = data;
                     }

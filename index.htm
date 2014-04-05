@@ -18,13 +18,22 @@
     <script>
         $(document).ready( function() {
             ngm.init({
+                // the local dummydata.json file is for simple test cases but only works in firefox!
+                // it is recommended to set a url here which returns json data:
                 'dataSourceUri': "./data/dummydata.json",
+                // the jquery selector for the container dom element
                 'selector': '#ngm-map',
+                //
                 'width': '700px',
                 'height': '700px',
+                // center coordinates - all other coordinates are calculated on
+                // these values as base
                 'center' : [1225, 1225],
+                //
                 'scale' : 10, // pix width of one field unit
+                //
                 'range' : 50,
+                //
                 'layers': [
                     {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
                     {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},

@@ -1,8 +1,8 @@
 $(document).ready( function() {
     ngm_editor = {
         init: function (config) {
-            ngm_editor.dataSourceUri = config['dataSourceUri'];
-            ngm_editor.layers = config['layers'];
+            ngm_editor.dataSourceUri = config.dataSourceUri;
+            ngm_editor.layers = config.layers;
 
             var controls = $('#ngm-editor');
             var objectTypes = ngm_editor.loadObjectTypes();
@@ -42,7 +42,6 @@ $(document).ready( function() {
             return (function () {
                 var json = null;
                 $.ajax({
-                    dataType: 'jsonp',
                     jsonp: 'jsonp_callback',
                     'async': false,
                     'global': false,

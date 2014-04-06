@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nouron Galaxy Map Test</title>
-    <link href="css/ngm.css" rel="stylesheet">
+    <link href="../../css/ngm.css" rel="stylesheet">
   </head>
   <body>
 
@@ -15,14 +15,15 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="js/ngm.js"></script>
-    <script src="js/ngm-editor.js"></script>
+    <script src="../../js/ngm.js"></script>
+    <script src="../../js/ngm-editor.js"></script>
     <script>
         $(document).ready( function() {
             layers = [
                 {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
-                {'name': 'buildings', 'class': 'ngm-buildings-layer', 'objectDefaultShape': 'square'},
-                {'name': 'streets', 'class': 'ngm-streets-layer', 'objectDefaultShape': 'square'},
+                {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},
+                {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square'},
+                {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
             ];
 
             ngm.init({
@@ -32,8 +33,8 @@
                 'width': '700px',
                 'height': '700px',
                 'center' : [0, 0],
-                'scale' : 50, // pix width of one field unit
-                'range' : 10,
+                'scale' : 10, // pix width of one field unit
+                'range' : 50,
                 'layers': layers
             });
 

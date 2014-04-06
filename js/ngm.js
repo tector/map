@@ -21,7 +21,7 @@ $(document).ready( function() {
     function sprintf(format, etc) {
         var arg = arguments;
         var i = 1;
-        return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++] });
+        return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++]; });
     }
 
     ngm = {
@@ -125,7 +125,7 @@ $(document).ready( function() {
                     margint_top = -halfheight;
                     break;
                 default:
-                    break;
+                    throw "invalid direction";
             }
 
             //console.log(class_, width, height, margin_left, margin_top);
@@ -181,7 +181,7 @@ $(document).ready( function() {
          * @return array
          */
         loadMapDataByCoords: function(coordx, coordy, initfullmap) {
-            if (initfullmap == true) {
+            if (initfullmap === true) {
                 data = ngm.loadMapDataInArea([coordx-ngm.range*1.5, coordy-ngm.range*1.5], [coordx+ngm.range*1.5,coordy+ngm.range*1.5]);
             } else {
                 data = ngm.loadMapDataInArea([coordx-ngm.range*0.5, coordy-ngm.range*0.5], [coordx+ngm.range*0.5,coordy+ngm.range*0.5]);
@@ -300,7 +300,7 @@ $(document).ready( function() {
                     break;
                 case 'east':
                     targetsvg = $('.grid-east').not('.grid-north')
-                                                .not('.grid-south');
+                                               .not('.grid-south');
                     break;
                 case 'south-east':
                     targetsvg = $('.grid-south.grid-east');
@@ -310,7 +310,7 @@ $(document).ready( function() {
                     break;
                 case 'west':
                     targetsvg = $('.grid-west').not('.grid-north')
-                                                .not('.grid-south');
+                                               .not('.grid-south');
                     break;
                 case 'south-west':
                     targetsvg = $('.grid-south.grid-west');
@@ -338,7 +338,7 @@ $(document).ready( function() {
             var test = ngm.layers;
 
             for (i=0; i<ngm.layers.length; i++) {
-                var objects = data.filter(function(elem){return elem.layer==i});
+                var objects = data.filter(function(elem){return elem.layer==i;});
                 ngm.drawLayerObjects(targetsvg[0], ngm.layers[i], objects);
             }
         },
@@ -391,7 +391,7 @@ $(document).ready( function() {
             if (layerConfig.objectDefaultShape == 'circle') {
                 for (var i=0; i<layerObjects.length; i++) {
                     var r = Math.floor(ngm.scale/2);
-                    var attribs = layerObjects[i].attribs;
+                    attribs = layerObjects[i].attribs;
                     group.appendChild(makeSVG('circle', {
                         'title': attribs.title+'('+layerObjects[i].x+','+layerObjects[i].y+')',
                         'cx': parseInt(layerObjects[i].x) % ngm.range*ngm.scale+r,
@@ -406,18 +406,18 @@ $(document).ready( function() {
                     }));
                 }
             } else {
-                for (var i=0; i<layerObjects.length; i++) {
-                    var attribs = layerObjects[i].attribs;
+                for (var j=0; j<layerObjects.length; j++) {
+                    attribs = layerObjects[j].attribs;
                     group.appendChild(makeSVG('rect', {
                         'title': attribs.title,
-                        'x': parseInt(layerObjects[i].x) % ngm.range*ngm.scale,
-                        'y': parseInt(layerObjects[i].y) % ngm.range*ngm.scale,
+                        'x': parseInt(layerObjects[j].x) % ngm.range*ngm.scale,
+                        'y': parseInt(layerObjects[j].y) % ngm.range*ngm.scale,
                         'width': ngm.scale,
                         'height': ngm.scale,
                         'fill': 'grey',
                         'class': attribs.class,
-                        'data-x': layerObjects[i].x,
-                        'data-y': layerObjects[i].y
+                        'data-x': layerObjects[j].x,
+                        'data-y': layerObjects[j].y
                     }));
                 }
             }
@@ -430,9 +430,7 @@ $(document).ready( function() {
          */
         addSystems: function(direction) {
             var map = $(ngm.selector);
-
-            var delta = ngm.range
-
+            var delta = ngm.range;
             if (direction == 'east') {
                 $('.grid-svg').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
                 $(ngm.selector+' #field-selector').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
@@ -444,17 +442,17 @@ $(document).ready( function() {
                     $('.grid-west').remove();
                     // center -> west
                     elements = document.querySelectorAll('.grid-svg:not(.grid-west):not(.grid-east)');
-                    for (var i=0; i<elements.length; i++) {
+                    for (i=0; i<elements.length; i++) {
                         oldclass = elements[i].getAttribute('class');
                         newclass = oldclass + ' grid-west';
                         elements[i].setAttribute('class', newclass);
                     }
                     // east -> center
                     elements = document.querySelectorAll('.grid-east');
-                    for (var i=0; i<elements.length; i++) {
+                    for (i=0; i<elements.length; i++) {
                         oldclass = elements[i].getAttribute('class');
                         newclass = oldclass.replace('grid-east', '')
-                                               .replace('  ', ' ');
+                                           .replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
                     // create new
@@ -492,7 +490,7 @@ $(document).ready( function() {
                     for (i=0; i<elements.length; i++) {
                         oldclass = elements[i].getAttribute('class');
                         newclass = oldclass.replace('grid-west', '')
-                                               .replace('  ', ' ');
+                                           .replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
 
@@ -532,7 +530,7 @@ $(document).ready( function() {
                     for (i=0; i<elements.length; i++) {
                         oldclass = elements[i].getAttribute('class');
                         newclass = oldclass.replace('grid-north', '')
-                                               .replace('  ', ' ');
+                                           .replace('  ', ' ');
                         elements[i].setAttribute('class', newclass);
                     }
 

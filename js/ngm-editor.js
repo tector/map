@@ -11,7 +11,7 @@ $(document).ready( function() {
                 var objects = objectTypes.filter(function(el){return (el.layer == i);});
                 for (var j=0; j<objects.length; j++) {
                     //console.log(objects[j]['attribs']['image']);
-                    html = html + '<div class="object ' + objects[j].attribs.class + '" style="background-image: url(./'+ objects[j].attribs.image +')"></div>'
+                    html = html + '<div class="object ' + objects[j].attribs.class + '" style="background-image: url(./'+ objects[j].attribs.image +')"></div>';
                 }
                 html = html + '</fieldset>';
                 controls.append(html);
@@ -52,19 +52,18 @@ $(document).ready( function() {
             })();
         },
         exportMap: function() {
-            var objects_data = []
+            var objects_data = [];
             $('.ngm svg g').children().each(function(i, item){
                 var layer_class = $(this).parent().attr('class');
                 if (this.tagName == 'rect' || this.tagName == 'circle') {
-                    var object_data = {
+                    objects_data.push({
                         'attr': {
                             'class' : $(this).attr('class'),
                             'title' : $(this).attr('title')
                         },
                         'x' : $(this).data('x'),
                         'y' : $(this).data('y')
-                    }
-                    objects_data.push(object_data);
+                    });
                 }
             });
             return objects_data;

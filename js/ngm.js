@@ -278,7 +278,6 @@ $(document).ready( function() {
                         break;
                     default:
                         throw "invalid push direction";
-                        break;
                 }
             });
 
@@ -331,7 +330,6 @@ $(document).ready( function() {
                     break;
                 default:
                     throw "invalid direction given";
-                    break;
             }
 
             ngm.drawGrid(targetsvg[0]);
@@ -592,7 +590,7 @@ $(document).ready( function() {
         },
 
         exportMap: function() {
-            var objects_data = []
+            var objects_data = [];
             $('.ngm svg g').children().each(function(i, item){
                 var layer_class = $(this).parent().attr('class');
                 if (this.tagName == 'rect' || this.tagName == 'circle') {
@@ -608,6 +606,6 @@ $(document).ready( function() {
             });
             return objects_data;
         }
-    }
+    };
 
 });

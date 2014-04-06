@@ -3,7 +3,6 @@ $(document).ready( function() {
         init: function (config) {
             ngm_editor.dataSourceUri = config.dataSourceUri;
             ngm_editor.layers = config.layers;
-
             var controls = $('#ngm-editor');
             var objectTypes = ngm_editor.loadObjectTypes();
             for (var i=0; i<ngm_editor.layers.length; i++) {
@@ -12,7 +11,7 @@ $(document).ready( function() {
                 var objects = objectTypes.filter(function(el){return (el.layer == i);});
                 for (var j=0; j<objects.length; j++) {
                     //console.log(objects[j]['attribs']['image']);
-                    html = html + '<div class="object ' + objects[j]['attribs']['class'] + '" style="background-image: url(./'+ objects[j]['attribs']['image'] +')"></div>'
+                    html = html + '<div class="object ' + objects[j].attribs.class + '" style="background-image: url(./'+ objects[j].attribs.image +')"></div>'
                 }
                 html = html + '</fieldset>';
                 controls.append(html);
@@ -33,10 +32,8 @@ $(document).ready( function() {
                 console.log(layerClass);
                 var tmp = $(".grid-svg ."+layerClass);
                 console.log(tmp);
-
             });
         },
-
         loadObjectTypes: function() {
             // currently use of dummy data
             return (function () {
@@ -54,7 +51,6 @@ $(document).ready( function() {
                 return json;
             })();
         },
-
         exportMap: function() {
             var objects_data = []
             $('.ngm svg g').children().each(function(i, item){

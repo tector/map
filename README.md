@@ -7,13 +7,13 @@ Nouron Galaxy Map is a javascript generated dynamic SVG map for browsergames
 Quickstart
 ----------
 
-create a div with class "ngm" and fill the data attributes data-height and data-width with your desired values (currently 700px is default - other values can be buggy for now)
+create a div with class "ngm":
 
 ```html
     <div class="ngm"></div> <!-- content will be filled by javascript! -->
 ```
 
-inlucde ngm.js at the end of html and execute init method:
+inlucde ngm.js at the end of html and execute init method with your desired settings:
 
 ```html
 <script src="ngm.js"></script>
@@ -23,7 +23,7 @@ inlucde ngm.js at the end of html and execute init method:
             'dataSourceUri': "./dummydata.json", // data source - see description below
             'selector': '.ngm', // jquery selector to load content inside
             'width': '700px',
-            'height': '700px', 
+            'height': '700px',
             'center' : [1225, 1225], // absolute current center (these are business coords - not page coords!)
             'scale' : 10, // pix width of one field unit
             'range' : 50, // how many field units has one map (horizontal)
@@ -40,7 +40,27 @@ inlucde ngm.js at the end of html and execute init method:
 
 ### dataSourceUri
 
-currently ./dummydata.json is included for testing purposes. Later it is intended to name a source uri (e.g. ajax function call) with minimum and maximum coordinates as query parameters. The *result json* has to have the following contents. 
+currently ./dummydata.json is included for testing purposes. Later it is intended
+to name a source uri (e.g. ajax function call) with minimum and maximum coordinates
+as query parameters.
+
+:exclamation: ATTENTION: if you want to test the examples locally and you have
+no webserver like apache or nginx running you have to start a simple development
+server to avoid problems concerning the same-origin-policy that major browsers
+have build in. (see: http://en.wikipedia.org/wiki/Same-origin_policy)
+
+Examples:
+```bash
+# php >= 5.3
+(project_root)$ php -S localhost:10000
+
+# python 2.7
+(project_root)$ python -m SimpleHTTPServer 10000
+
+# then navigate your browser to http://localhost:10000/examples/galaxy_map
+```
+
+The *result json* has to have the following contents.
 
 * x
 * y

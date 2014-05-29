@@ -7,10 +7,10 @@ Nouron Galaxy Map is a javascript generated dynamic SVG map for browsergames
 Quickstart
 ----------
 
-create a div with class "ngm":
+create a div (without any attributes) with an id you like to use, e.g. "ngm-map":
 
 ```html
-    <div class="ngm"></div> <!-- content will be filled by javascript! -->
+    <div id="ngm-map"></div> <!-- content will be filled by javascript! -->
 ```
 
 inlucde ngm.js at the end of html and execute init method with your desired settings:
@@ -21,7 +21,7 @@ inlucde ngm.js at the end of html and execute init method with your desired sett
     $(document).ready( function() {
         ngm.init({
             'dataSourceUri': "./dummydata.json", // data source - see description below
-            'selector': '.ngm', // jquery selector to load content inside
+            'selector': '#ngm-map', // jquery selector to load content inside; set your chosen id here!
             'width': '700px',
             'height': '700px',
             'center' : [1225, 1225], // absolute current center (these are business coords - not page coords!)
@@ -40,9 +40,7 @@ inlucde ngm.js at the end of html and execute init method with your desired sett
 
 ### dataSourceUri
 
-currently ./dummydata.json is included for testing purposes. Later it is intended
-to name a source uri (e.g. ajax function call) with minimum and maximum coordinates
-as query parameters.
+currently ./dummydata.json is included for testing purposes. But you can put in any url that will respond on an ajax request with the required json format data. (TODO: more details and example)
 
 :exclamation: ATTENTION: if you want to test the examples locally and you have
 no webserver like apache or nginx running you have to start a simple development

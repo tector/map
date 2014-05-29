@@ -1,29 +1,5 @@
 $(document).ready( function() {
 
-    function makeSVG(tag, attribs, value)
-    {
-        if (attribs === null) {
-            attribs = {};
-        }
-
-        var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (var k in attribs) {
-            el.setAttribute(k, attribs[k]);
-        }
-
-        if (value) {
-            value = document.createTextNode(value);
-            el.appendChild(value);
-        }
-        return el;
-    }
-
-    function sprintf(format, etc) {
-        var arg = arguments;
-        var i = 1;
-        return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++]; });
-    }
-
     ngm = {
         /* defaults */
         systemsize: 50, // units
@@ -31,22 +7,50 @@ $(document).ready( function() {
         width: 700,
         height: 700,
 
+        sprintf: function(format, etc)
+        {
+            var arg = arguments;
+            var i = 1;
+            return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++]; });
+        },
+
+        makeSVG: function(tag, attribs, value)
+        {
+            if (attribs === null) {
+                attribs = {};
+            }
+
+            var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            for (var k in attribs) {
+                el.setAttribute(k, attribs[k]);
+            }
+
+            if (value) {
+                value = document.createTextNode(value);
+                el.appendChild(value);
+            }
+            return el;
+        },
+
         /**
          * calculate and (re)positioning the field selector
          *
          * @param e  mouseclick event
          * @return coords
          */
-        toggleSelect: function (e) {
-            range = ngm.range;
-            scale = ngm.scale;
-            xMin = Math.floor(ngm.coordx - ngm.range/2);
-            yMin = Math.floor(ngm.coordy - ngm.range/2);
+        toggleSelect: function (e)
+        {
+            var range = ngm.range;
+            var scale = ngm.scale;
+            var xMin = Math.floor(ngm.coordx - ngm.range/2);
+            var yMin = Math.floor(ngm.coordy - ngm.range/2);
 
-            map_offset_left = Math.floor($(ngm.selector).offset().left);
-            map_offset_top  = Math.floor($(ngm.selector).offset().top);
-            center_svg_left = Math.floor($(ngm.selector + " .grid-svg:nth(4)").offset().left);
-            center_svg_top  = Math.floor($(ngm.selector + " .grid-svg:nth(4)").offset().top);
+            var selector = ngm.selector + ' .ngm';
+
+            map_offset_left = Math.floor($(selector).offset().left);
+            map_offset_top  = Math.floor($(selector).offset().top);
+            center_svg_left = Math.floor($(selector + " .grid-svg:nth(4)").offset().left);
+            center_svg_top  = Math.floor($(selector + " .grid-svg:nth(4)").offset().top);
 
             x = xMin + Math.floor((e.pageX - center_svg_left) / scale);
             y = yMin + Math.floor((e.pageY - center_svg_top) / scale);
@@ -54,23 +58,20 @@ $(document).ready( function() {
             left = center_svg_left + (x - xMin) * scale - map_offset_left;
             top_ = center_svg_top  + (y - yMin) * scale - map_offset_top;
 
-            $(ngm.selector + ' #field-selector').remove();
-            $(ngm.selector).append('<div id="field-selector" style="top:'+top_+'px; left:'+left+'px; width:'+scale+'px; height:'+scale+'px;"><!-- --></div>');
+            $(selector + ' #field-selector').remove();
+            $(selector).append('<div id="field-selector" style="top:'+top_+'px; left:'+left+'px; width:'+scale+'px; height:'+scale+'px;"><!-- --></div>');
 
             return '['+x+','+y+',0]';
-        },
-
-        addObjectToSVGDom: function() {
-            var tpl = '<svg class="grid-svg %s" width="%spx" height="%spx" style="margin-left: %spx; margin-top: %spx;"></svg>';
-
         },
 
         /**
          * create a new svg dom element and position it in the right direction
          *
          * @param direction north|east|south|west
+         * @return a svg string
          */
-        createGridSVGDom: function(direction) {
+        createGridSVGDom: function(direction)
+        {
             var tpl = '<svg class="grid-svg %s" width="%spx" height="%spx" style="margin-left: %spx; margin-top: %spx;"></svg>';
             var width  = ngm.range * ngm.scale;
             var height = ngm.range * ngm.scale;
@@ -128,14 +129,16 @@ $(document).ready( function() {
                     throw "invalid direction";
             }
 
-            //console.log(class_, width, height, margin_left, margin_top);
-            return sprintf(tpl, class_, width, height, margin_left, margin_top);
+            //console.log(ngm.sprintf(tpl, class_, width, height, margin_left, margin_top));
+            return ngm.sprintf(tpl, class_, width, height, margin_left, margin_top);
         },
-        setNewCenterCoords: function(coordx, coordy) {
+        setNewCenterCoords: function(coordx, coordy)
+        {
             // TODO: complete reload of all SVG maps with new coords as center
         },
 
-        loadMapDataInArea: function(xymin, xymax) {
+        loadMapDataInArea: function(xymin, xymax)
+        {
             // currently use of dummy data (only works in firefox!)
             // TODO: make this work with real source data!
             var data = (function () {
@@ -144,7 +147,7 @@ $(document).ready( function() {
                     jsonp: 'jsonp_callback',
                     'async': false,
                     'global': false,
-                    'url': sprintf(ngm.dataSourceUri, xymin, xymax),
+                    'url': ngm.sprintf(ngm.dataSourceUri, xymin, xymax),
                     'dataType': "json",
                     'success': function (data) {
                         json = data;
@@ -180,7 +183,8 @@ $(document).ready( function() {
          * @param {number} coordy
          * @return array
          */
-        loadMapDataByCoords: function(coordx, coordy, initfullmap) {
+        loadMapDataByCoords: function(coordx, coordy, initfullmap)
+        {
             if (initfullmap === true) {
                 data = ngm.loadMapDataInArea([coordx-ngm.range*1.5, coordy-ngm.range*1.5], [coordx+ngm.range*1.5,coordy+ngm.range*1.5]);
             } else {
@@ -194,7 +198,8 @@ $(document).ready( function() {
          *
          * @param config: array of configuration options
          */
-        init: function(config) {
+        init: function(config)
+        {
             ngm.dataSourceUri = config.dataSourceUri;
             ngm.mode = config.mode;
             ngm.selector = config.selector;
@@ -205,9 +210,12 @@ $(document).ready( function() {
             ngm.scale = parseInt(config.scale);
             ngm.range = parseInt(config.range);
             ngm.layers = config.layers;
-            var map = $(ngm.selector);
 
-            map.attr('style', 'width:'+ngm.width+';height:'+ngm.height+';position:absolute');
+            $(ngm.selector).attr('style', 'position:absolute');
+            $(ngm.selector).html('<div class="ngm" style="width:'+ngm.width+';height:'+ngm.height+';"></div>');
+
+            var selector = ngm.selector + ' .ngm';
+            map = $(selector).eq(0);
 
             data_north_west = ngm.loadMapDataByCoords(ngm.coordx-ngm.range, ngm.coordy-ngm.range);
             data_north      = ngm.loadMapDataByCoords(ngm.coordx, ngm.coordy-ngm.range);
@@ -247,31 +255,31 @@ $(document).ready( function() {
             map.append('<div id="push-east" class="grid-push grid-push-east">&#x25B6;</div>');
             map.append('<div id="push-south" class="grid-push grid-push-south">&#x25BC;</div>');
 
-            $(ngm.selector + ' .grid-push').on('click', function(e) {
+            $(selector + ' .grid-push').on('click', function(e) {
                 e.preventDefault();
                 var id = $(this).attr('id');
                 console.log(id);
                 switch (id) {
                     case 'push-east':
-                        $(ngm.selector + ' .grid-svg').each(function(){
+                        $(selector + ' .grid-svg').each(function(){
                             left = parseInt($(this).css('margin-left').replace('px', ''));
                         });
                         ngm.addSystems('east');
                         break;
                     case 'push-west':
-                        $(ngm.selector + ' .grid-svg').each(function(){
+                        $(selector + ' .grid-svg').each(function(){
                             left = parseInt($(this).css('margin-left').replace('px', ''));
                         });
                         ngm.addSystems('west');
                         break;
                     case 'push-north':
-                        $(ngm.selector + ' .grid-svg').each(function(){
+                        $(selector + ' .grid-svg').each(function(){
                             top = parseInt($(this).css('margin-top').replace('px', ''));
                         });
                         ngm.addSystems('north');
                         break;
                     case 'push-south':
-                        $(ngm.selector + ' .grid-svg').each(function(){
+                        $(selector + ' .grid-svg').each(function(){
                             top = parseInt($(this).css('margin-top').replace('px', ''));
                         });
                         ngm.addSystems('south');
@@ -291,8 +299,8 @@ $(document).ready( function() {
          * @param direction north|east|south|west
          * @param data
          */
-        fillWithContent: function(direction, data) {
-
+        fillWithContent: function(direction, data)
+        {
             switch (direction) {
                 case 'north-east':
                     targetsvg = $('.grid-north.grid-east');
@@ -320,7 +328,7 @@ $(document).ready( function() {
                     break;
                 case 'south':
                     targetsvg = $('.grid-south').not('.grid-west')
-                                                    .not('.grid-east');
+                                                .not('.grid-east');
                     break;
                 case 'center':
                     targetsvg = $('.grid-svg').not('.grid-north')
@@ -333,8 +341,6 @@ $(document).ready( function() {
             }
 
             ngm.drawGrid(targetsvg[0]);
-            var test = ngm.layers;
-
             for (i=0; i<ngm.layers.length; i++) {
                 var objects = data.filter(function(elem){return elem.layer==i;});
                 ngm.drawLayerObjects(targetsvg[0], ngm.layers[i], objects);
@@ -349,9 +355,9 @@ $(document).ready( function() {
             max = Math.floor(ngm.range/10) * ngm.scale;
 
             // horizontal lines
-            var group = makeSVG('g', {'class': 'ngm-grid-layer'});
+            var group = ngm.makeSVG('g', {'class': 'ngm-grid-layer'});
             for (var i=0; i<10; i++) {
-                group.appendChild(makeSVG('line', {
+                group.appendChild(ngm.makeSVG('line', {
                     x1: 0,
                     y1: i*max,
                     x2: ngm.range*ngm.scale,
@@ -364,7 +370,7 @@ $(document).ready( function() {
 
             // vertical lines
             for (var j=0; j<10; j++) {
-                group.appendChild(makeSVG('line', {
+                group.appendChild(ngm.makeSVG('line', {
                     x1: j*max,
                     y1: 0,
                     x2: j*max,
@@ -385,12 +391,12 @@ $(document).ready( function() {
          * @param layerObjects
          */
         drawLayerObjects: function(targetDomElement, layerConfig, layerObjects){
-            var group = makeSVG('g', {'class': layerConfig.class});
+            var group = ngm.makeSVG('g', {'class': layerConfig.class});
             if (layerConfig.objectDefaultShape == 'circle') {
                 for (var i=0; i<layerObjects.length; i++) {
                     var r = Math.floor(ngm.scale/2);
                     attribs = layerObjects[i].attribs;
-                    group.appendChild(makeSVG('circle', {
+                    group.appendChild(ngm.makeSVG('circle', {
                         'title': attribs.title+'('+layerObjects[i].x+','+layerObjects[i].y+')',
                         'cx': parseInt(layerObjects[i].x) % ngm.range*ngm.scale+r,
                         'cy': parseInt(layerObjects[i].y) % ngm.range*ngm.scale+r,
@@ -406,7 +412,7 @@ $(document).ready( function() {
             } else {
                 for (var j=0; j<layerObjects.length; j++) {
                     attribs = layerObjects[j].attribs;
-                    group.appendChild(makeSVG('rect', {
+                    group.appendChild(ngm.makeSVG('rect', {
                         'title': attribs.title,
                         'x': parseInt(layerObjects[j].x) % ngm.range*ngm.scale,
                         'y': parseInt(layerObjects[j].y) % ngm.range*ngm.scale,
@@ -427,11 +433,12 @@ $(document).ready( function() {
          * @param direction north|east|south|west
          */
         addSystems: function(direction) {
-            var map = $(ngm.selector);
+            var selector = ngm.selector + ' .ngm';
+            var map = $(selector);
             var delta = ngm.range;
             if (direction == 'east') {
                 $('.grid-svg').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
-                $(ngm.selector+' #field-selector').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
+                $(selector+' #field-selector').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
                 ngm.coordx = ngm.coordx+delta;
                 console.log('new center xy:', ngm.coordx, ngm.coordy);
 
@@ -470,7 +477,7 @@ $(document).ready( function() {
             } else if (direction == 'west') {
 
                 $('.grid-svg').animate({marginLeft: "+="+delta*ngm.scale+'px'}, 500);
-                $(ngm.selector+' #field-selector').animate({marginLeft: "+="+delta*ngm.scale+'px'}, 500);
+                $(selector +' #field-selector').animate({marginLeft: "+="+delta*ngm.scale+'px'}, 500);
                 ngm.coordx = ngm.coordx-delta;
                 console.log('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {
@@ -509,7 +516,7 @@ $(document).ready( function() {
             } else if (direction == 'north') {
 
                 $('.grid-svg').animate({marginTop: "+="+delta*ngm.scale+'px'}, 500);
-                $(ngm.selector+' #field-selector').animate({marginTop: "+="+delta*ngm.scale+'px'}, 500);
+                $(selector+' #field-selector').animate({marginTop: "+="+delta*ngm.scale+'px'}, 500);
                 ngm.coordy = ngm.coordy-delta;
                 console.log('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {
@@ -548,7 +555,7 @@ $(document).ready( function() {
             } else if (direction == 'south') {
 
                 $('.grid-svg').animate({marginTop: "-="+delta*ngm.scale+'px'}, 500);
-                $(ngm.selector+' #field-selector').animate({marginTop: "-="+delta*ngm.scale+'px'}, 500);
+                $(selector+' #field-selector').animate({marginTop: "-="+delta*ngm.scale+'px'}, 500);
                 ngm.coordy = ngm.coordy+delta;
                 console.log('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {

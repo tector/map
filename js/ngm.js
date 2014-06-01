@@ -21,8 +21,13 @@ $(document).ready( function() {
             }
 
             var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+
             for (var k in attribs) {
-                el.setAttribute(k, attribs[k]);
+                if (k=='xlink:href') {
+                    el.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', attribs[k]);
+                } else {
+                    el.setAttribute(k, attribs[k]);
+                }
             }
 
             if (value) {
@@ -60,6 +65,7 @@ $(document).ready( function() {
 
             $(selector + ' #field-selector').remove();
             $(selector).append('<div id="field-selector" style="top:'+top_+'px; left:'+left+'px; width:'+scale+'px; height:'+scale+'px;"><!-- --></div>');
+            console.log('['+x+','+y+',0]');
 
             return '['+x+','+y+',0]';
         },
@@ -355,6 +361,25 @@ $(document).ready( function() {
             }
 
             ngm.drawGrid(targetsvg[0]);
+
+            var defsgroup = ngm.makeSVG('defs', {});
+            patternids = [];
+            for (var l=0; l<data.length; l++) {
+                class_ = data[l].attribs.class;
+                img_url = data[l].attribs.image_url;
+                //img_url = '/img/galaxy/test.png';
+                if (patternids.indexOf(class_) == -1) {
+                    patternids.push(class_);
+                    pattern = ngm.makeSVG('pattern', {'id': class_,'patternUnits': 'userSpaceOnUse', 'width':ngm.scale, 'height':ngm.scale});
+                    image = ngm.makeSVG('image', {'xlink:href': img_url, 'x':'0', 'y':'0','width':ngm.scale,'height':ngm.scale});
+                    //image = ngm.makeSVG('circle', {'cx':'10', 'cy':'10','r':'10', 'style':'stroke: none;','xlink:href': img_url});
+                    pattern.appendChild(image);
+                    defsgroup.appendChild(pattern);
+                }
+            }
+
+            targetsvg[0].appendChild(defsgroup);
+
             for (i=0; i<ngm.layers.length; i++) {
                 var objects = data.filter(function(elem){return elem.layer==i;});
                 ngm.drawLayerObjects(targetsvg[0], ngm.layers[i], objects);
@@ -405,20 +430,21 @@ $(document).ready( function() {
          * @param layerObjects
          */
         drawLayerObjects: function(targetDomElement, layerConfig, layerObjects){
+
             var group = ngm.makeSVG('g', {'class': layerConfig.class});
             if (layerConfig.objectDefaultShape == 'circle') {
                 for (var i=0; i<layerObjects.length; i++) {
-                    var r = Math.floor(ngm.scale/2);
+                    var r = 0.5;
+                    var m = 0.5 * ngm.range;
                     attribs = layerObjects[i].attribs;
                     group.appendChild(ngm.makeSVG('circle', {
                         'title': attribs.title+'('+layerObjects[i].x+','+layerObjects[i].y+')',
-                        'cx': parseInt(layerObjects[i].x) % ngm.range*ngm.scale+r,
-                        'cy': parseInt(layerObjects[i].y) % ngm.range*ngm.scale+r,
-                        'r':  r,
-                        'fill': 'transparent',
+                        'cx': ((parseInt(layerObjects[i].x) + r + m ) % ngm.range) * ngm.scale,
+                        'cy': ((parseInt(layerObjects[i].y) + r + m ) % ngm.range) * ngm.scale,
+                        'r':  r * ngm.scale,
+                        'fill': 'url(#'+attribs.class+')',
                         'stroke-width': '1',
                         'stroke': "#999",
-                        'class': attribs.class,
                         'data-x': layerObjects[i].x,
                         'data-y': layerObjects[i].y
                     }));
@@ -426,15 +452,16 @@ $(document).ready( function() {
             } else {
                 for (var j=0; j<layerObjects.length; j++) {
                     attribs = layerObjects[j].attribs;
-                    var r = Math.floor(ngm.range/2)*ngm.scale;
+                    var m = Math.floor(ngm.range/2)*ngm.scale;
                     group.appendChild(ngm.makeSVG('rect', {
                         'title': attribs.title,
-                        'x': (parseInt(layerObjects[j].x) % ngm.range*ngm.scale)+r,
-                        'y': (parseInt(layerObjects[j].y) % ngm.range*ngm.scale)+r,
+                        'x': (parseInt(layerObjects[j].x) % ngm.range*ngm.scale)+m,
+                        'y': (parseInt(layerObjects[j].y) % ngm.range*ngm.scale)+m,
                         'width': ngm.scale,
                         'height': ngm.scale,
-                        'fill': 'grey',
-                        'class': attribs.class,
+                        'fill': 'url(#'+attribs.class+')',
+                        'stroke-width': '1',
+                        'stroke': "#999",
                         'data-x': layerObjects[j].x,
                         'data-y': layerObjects[j].y
                     }));

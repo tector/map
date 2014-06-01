@@ -38,7 +38,8 @@ inlucde ngm.js at the end of html and execute init method with your desired sett
 </script>
 ```
 
-### Settings
+Settings
+--------
 
 #### dataSourceUri
 
@@ -82,7 +83,7 @@ The *result json* has to have the following contents.
 {"layer": 1, "x": 1255, "y": 1255, "attribs":{"title":"south-east test", "class": "planet"}}]
 ```
 
-** Execute map examples:**
+**Execute map examples:**
 
 currently ./dummydata.json is included for testing purposes. No x and y given.
 
@@ -163,15 +164,15 @@ the full map consists of 9 separate SVG DOM elements:
 
 ```html
 <div class="ngm" data-height="700px" data-width="700px">
-	<svg class="grid-svg grid-north grid-west">...</svg>
-	<svg class="grid-svg grid-north">...</svg>
-	<svg class="grid-svg grid-north grid-east">...</svg>
-	<svg class="grid-svg grid-west">...</svg>
-	<svg class="grid-svg">...</svg>
-	<svg class="grid-svg grid-east">...</svg>
-	<svg class="grid-svg grid-south grid-west">...</svg>
-	<svg class="grid-svg grid-south">...</svg>
-	<svg class="grid-svg grid-south grid-east">...</svg>
+    <svg class="grid-svg grid-north grid-west">...</svg>
+    <svg class="grid-svg grid-north">...</svg>
+    <svg class="grid-svg grid-north grid-east">...</svg>
+    <svg class="grid-svg grid-west">...</svg>
+    <svg class="grid-svg">...</svg>
+    <svg class="grid-svg grid-east">...</svg>
+    <svg class="grid-svg grid-south grid-west">...</svg>
+    <svg class="grid-svg grid-south">...</svg>
+    <svg class="grid-svg grid-south grid-east">...</svg>
 </div>
 ```
 
@@ -201,3 +202,7 @@ the full map consists of 9 separate SVG DOM elements:
 |             ||             ||             |
 +-------------++-------------++-------------+
 </pre>
+
+License
+-------
+This software is licensed under MIT License. See license.md for details.

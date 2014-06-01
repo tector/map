@@ -137,30 +137,28 @@ $(document).ready( function() {
             // TODO: complete reload of all SVG maps with new coords as center
         },
 
-        loadMapDataInArea: function(xymin, xymax)
-        {
-            // currently use of dummy data (only works in firefox!)
-            // TODO: make this work with real source data!
-            var data = (function () {
-                var json = null;
-                $.ajax({
-                    jsonp: 'jsonp_callback',
-                    'async': false,
-                    'global': false,
-                    'url': ngm.sprintf(ngm.dataSourceUri, xymin, xymax),
-                    'dataType': "json",
-                    'success': function (data) {
-                        json = data;
-                    }
-                });
-                return json;
-            })();
-
-            return data.filter(function(el){
-                return (el.y >= xymin[1] && el.y < xymax[1] &&
-                        el.x >= xymin[0] && el.x < xymax[0]);
-            });
-        },
+//        loadMapDataInArea: function(xymin, xymax)
+//        {
+//            var data = (function () {
+//                var json = null;
+//                $.ajax({
+//                    jsonp: 'jsonp_callback',
+//                    'async': false,
+//                    'global': false,
+//                    'url': ngm.sprintf(ngm.dataSourceUri, xymin, xymax),
+//                    'dataType': "json",
+//                    'success': function (data) {
+//                        json = data;
+//                    }
+//                });
+//                return json;
+//            })();
+//
+//            return data.filter(function(el){
+//                return (el.y >= xymin[1] && el.y < xymax[1] &&
+//                        el.x >= xymin[0] && el.x < xymax[0]);
+//            });
+//        },
 
         /**
          * load data for one svg map:
@@ -185,12 +183,28 @@ $(document).ready( function() {
          */
         loadMapDataByCoords: function(coordx, coordy, initfullmap)
         {
-            if (initfullmap === true) {
-                data = ngm.loadMapDataInArea([coordx-ngm.range*1.5, coordy-ngm.range*1.5], [coordx+ngm.range*1.5,coordy+ngm.range*1.5]);
-            } else {
-                data = ngm.loadMapDataInArea([coordx-ngm.range*0.5, coordy-ngm.range*0.5], [coordx+ngm.range*0.5,coordy+ngm.range*0.5]);
-            }
-            return data;
+            var xymin = [coordx-ngm.range*0.5, coordy-ngm.range*0.5];
+            var xymax = [coordx+ngm.range*0.5, coordy+ngm.range*0.5];
+
+            var data = (function () {
+                var json = null;
+                $.ajax({
+                    jsonp: 'jsonp_callback',
+                    'async': false,
+                    'global': false,
+                    'url': ngm.sprintf(ngm.dataSourceUri, coordx, coordy),
+                    'dataType': "json",
+                    'success': function (data) {
+                        json = data;
+                    }
+                });
+                return json;
+            })();
+
+            return data.filter(function(el){
+                return (el.y >= xymin[1] && el.y < xymax[1] &&
+                        el.x >= xymin[0] && el.x < xymax[0]);
+            });
         },
         /**
          * initialize whole map for first time
@@ -258,7 +272,7 @@ $(document).ready( function() {
             $(selector + ' .grid-push').on('click', function(e) {
                 e.preventDefault();
                 var id = $(this).attr('id');
-                console.log(id);
+                //console.log(id);
                 switch (id) {
                     case 'push-east':
                         $(selector + ' .grid-svg').each(function(){
@@ -291,7 +305,7 @@ $(document).ready( function() {
 
             $(".grid-svg").on('click', function(e) {
                 coords = ngm.toggleSelect(e);
-                console.log(coords);
+                //console.log(coords);
             });
         },
         /**
@@ -412,10 +426,11 @@ $(document).ready( function() {
             } else {
                 for (var j=0; j<layerObjects.length; j++) {
                     attribs = layerObjects[j].attribs;
+                    var r = Math.floor(ngm.range/2)*ngm.scale;
                     group.appendChild(ngm.makeSVG('rect', {
                         'title': attribs.title,
-                        'x': parseInt(layerObjects[j].x) % ngm.range*ngm.scale,
-                        'y': parseInt(layerObjects[j].y) % ngm.range*ngm.scale,
+                        'x': (parseInt(layerObjects[j].x) % ngm.range*ngm.scale)+r,
+                        'y': (parseInt(layerObjects[j].y) % ngm.range*ngm.scale)+r,
                         'width': ngm.scale,
                         'height': ngm.scale,
                         'fill': 'grey',

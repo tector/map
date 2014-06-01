@@ -7,10 +7,10 @@ Nouron Galaxy Map is a javascript generated dynamic SVG map for browsergames
 Quickstart
 ----------
 
-create a div with class "ngm":
+create a div (without any attributes) with an id you like to use, e.g. "ngm-map":
 
 ```html
-    <div class="ngm"></div> <!-- content will be filled by javascript! -->
+    <div id="ngm-map"></div> <!-- content will be filled by javascript! -->
 ```
 
 inlucde ngm.js at the end of html and execute init method with your desired settings:
@@ -21,7 +21,7 @@ inlucde ngm.js at the end of html and execute init method with your desired sett
     $(document).ready( function() {
         ngm.init({
             'dataSourceUri': "./dummydata.json", // data source - see description below
-            'selector': '.ngm', // jquery selector to load content inside
+            'selector': '#ngm-map', // jquery selector to load content inside; set your chosen id here!
             'width': '700px',
             'height': '700px',
             'center' : [1225, 1225], // absolute current center (these are business coords - not page coords!)
@@ -38,27 +38,18 @@ inlucde ngm.js at the end of html and execute init method with your desired sett
 </script>
 ```
 
-### dataSourceUri
+### Settings
 
-currently ./dummydata.json is included for testing purposes. Later it is intended
-to name a source uri (e.g. ajax function call) with minimum and maximum coordinates
-as query parameters.
+#### dataSourceUri
 
-:exclamation: ATTENTION: if you want to test the examples locally and you have
-no webserver like apache or nginx running you have to start a simple development
-server to avoid problems concerning the same-origin-policy that major browsers
-have build in. (see: http://en.wikipedia.org/wiki/Same-origin_policy)
+This setting is the most important part. The script has to know where to send ajax requests to get the map data.
 
-Examples:
-```bash
-# php >= 5.3
-(project_root)$ php -S localhost:10000
+For example i use this string in nouron: "/galaxy/json/getmapdata/%s/%s"
 
-# python 2.7
-(project_root)$ python -m SimpleHTTPServer 10000
+The string should be given a url schema with (sprintf compatible) placeholders for x and y! It would even work without the placeholders, e.g. for a static map (but it's not tested) - it is up to you what the ajax request will return! (see below)
 
-# then navigate your browser to http://localhost:10000/examples/galaxy_map
-```
+For the initial creation of the map x and y values from 'center'-setting will be used.
+X and y will mark the center and depending on the range setting map data around this center position will be loaded via ajax request.
 
 The *result json* has to have the following contents.
 
@@ -91,9 +82,62 @@ The *result json* has to have the following contents.
 {"layer": 1, "x": 1255, "y": 1255, "attribs":{"title":"south-east test", "class": "planet"}}]
 ```
 
+** Execute map examples:**
+
+currently ./dummydata.json is included for testing purposes. No x and y given.
+
+:exclamation: ATTENTION: if you want to test the examples locally and you have
+no webserver like apache or nginx running you have to start a simple development
+server to avoid problems concerning the same-origin-policy that major browsers
+have build in. (see: http://en.wikipedia.org/wiki/Same-origin_policy)
+
+```bash
+# php >= 5.3
+(project_root)$ php -S localhost:10000
+
+# python 2.7
+(project_root)$ python -m SimpleHTTPServer 10000
+
+# then navigate your browser to http://localhost:10000/examples/galaxy_map
+```
+
+#### selector
+
+You define a map container div in your html. This div will have a selector to be identified.
+It is up to you to choose an id or a class but it is purposed to use an id like '#ngm-map'.
+The div should not have any other attributes then the selector, otherwise it is possible that important attributes are overwritten with wrong values..
+
+#### width and height
+
+width and height of the map container div. Don't forget to give the unit type, e.g. '700px' (currently only pixel units are supported)
+
+#### center
+
+The initial center coordinates. All positions will be calculated on this coordinates as a basis.
+
+#### scale
+
+the scale: how many pixels will be used for one coordinate unit
+
+#### range
+
+distance in coordinates units from left to right or top to bottom border
+
+#### layers
+
+you can define up to four layers
+
+more info follows...
+
 
 Good to know
 ------------
+
+### pixel units vs coordinates units
+
+don't be confused with that:
+- pixel units are used for positioning DOM elements
+- coordinates units are used for you business objects, e.g. planets in a galaxy system map
 
 ### grid structure
 
@@ -157,9 +201,3 @@ the full map consists of 9 separate SVG DOM elements:
 |             ||             ||             |
 +-------------++-------------++-------------+
 </pre>
-
-### layer support
-
-you can define up to four layers
-
-more info follows...

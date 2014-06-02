@@ -17,7 +17,7 @@
         <div id="ngm-map"></div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../../js/ngm.js"></script>
     <script>
         $(document).ready( function() {
@@ -28,22 +28,28 @@
                 // the jquery selector for the container dom element
                 'selector': '#ngm-map',
                 //
-                'width': '700px',
-                'height': '700px',
+                'width': '500px',
+                'height': '500px',
                 // center coordinates - all other coordinates are calculated on
                 // these values as base
-                'center' : [1225, 1225],
+                'center' : [1220, 1220],
                 //
-                'scale' : 10, // pix width of one field unit
+                'scale' : 30, // pix width of one field unit
                 //
-                'range' : 50,
+                'range' : 10,
                 //
                 'layers': [
                     {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
                     {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},
                     {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square'},
                     {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
-                ]
+                ],
+                //
+                'background_image_url': 'img/starfield_blue.jpg'
+                // TODO:
+                // - object outlines = true/false
+                // - image folder
+                // - colors of raster lines
             });
         })
     </script>

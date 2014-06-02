@@ -230,9 +230,17 @@ $(document).ready( function() {
             ngm.scale = parseInt(config.scale);
             ngm.range = parseInt(config.range);
             ngm.layers = config.layers;
+            ngm.background_image_url = config.background_image_url;
+
+            console.log(ngm);
+            if (ngm.background_image_url != 'undefined') {
+                background = 'background-image: url('+ngm.background_image_url+')';
+            } else {
+                background = '';
+            }
 
             $(ngm.selector).attr('style', 'position:absolute');
-            $(ngm.selector).html('<div class="ngm" style="width:'+ngm.width+';height:'+ngm.height+';"></div>');
+            $(ngm.selector).html('<div class="ngm" style="width:'+ngm.width+';height:'+ngm.height+';'+background+'"></div>');
 
             var selector = ngm.selector + ' .ngm';
             map = $(selector).eq(0);
@@ -367,7 +375,6 @@ $(document).ready( function() {
             for (var l=0; l<data.length; l++) {
                 class_ = data[l].attribs.class;
                 img_url = data[l].attribs.image_url;
-                //img_url = '/img/galaxy/test.png';
                 if (patternids.indexOf(class_) == -1) {
                     patternids.push(class_);
                     pattern = ngm.makeSVG('pattern', {'id': class_,'patternUnits': 'userSpaceOnUse', 'width':ngm.scale, 'height':ngm.scale});
@@ -444,7 +451,7 @@ $(document).ready( function() {
                         'r':  r * ngm.scale,
                         'fill': 'url(#'+attribs.class+')',
                         'stroke-width': '1',
-                        'stroke': "#999",
+                        'stroke': "#333",
                         'data-x': layerObjects[i].x,
                         'data-y': layerObjects[i].y
                     }));
@@ -452,16 +459,16 @@ $(document).ready( function() {
             } else {
                 for (var j=0; j<layerObjects.length; j++) {
                     attribs = layerObjects[j].attribs;
-                    var m = Math.floor(ngm.range/2)*ngm.scale;
+                    var m = 0.5 * ngm.range;
                     group.appendChild(ngm.makeSVG('rect', {
                         'title': attribs.title,
-                        'x': (parseInt(layerObjects[j].x) % ngm.range*ngm.scale)+m,
-                        'y': (parseInt(layerObjects[j].y) % ngm.range*ngm.scale)+m,
+                        'x': ((parseInt(layerObjects[j].x) + m ) % ngm.range) * ngm.scale,
+                        'y': ((parseInt(layerObjects[j].y) + m ) % ngm.range) * ngm.scale,
                         'width': ngm.scale,
                         'height': ngm.scale,
                         'fill': 'url(#'+attribs.class+')',
-                        'stroke-width': '1',
-                        'stroke': "#999",
+                        'stroke-width': '0',
+                        'stroke': "#555",
                         'data-x': layerObjects[j].x,
                         'data-y': layerObjects[j].y
                     }));
@@ -646,7 +653,8 @@ $(document).ready( function() {
                     objects_data.push({
                         'attr': {
                             'class' : $(this).attr('class'),
-                            'title' : $(this).attr('title')
+                            'title' : $(this).attr('title'),
+                            'image_url': $(this).attr('image_url')
                         },
                         'x' : $(this).data('x'),
                         'y' : $(this).data('y')

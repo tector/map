@@ -234,7 +234,7 @@ So if you like you can visit the project under the following sources:
 * Homepage:  www.nouron.de
 * GitHub:    https://github.com/nouron/nouron
 * Twitter:   @_nouron
-* Facebook:  facebook.com/nouronbg
+* Facebook:  http://facebook.com/nouronbg
 * Google+:   https://plus.google.com/106638531327318351915
 
 Thank you! :)

@@ -215,23 +215,27 @@ the full map consists of 9 separate SVG DOM elements:
 </pre>
 
 **note:**
-In hybrid mode there will be a separate <div> tag for each <svg> tag.
+In hybrid mode there will be a separate div tag for each svg tag.
 
 Contact & Background
 --------------------
 
 If you use this tool i would appreciate a tiny note from you!
-Contact me via Twitter @_tector or email (mario.gehnke@yahoo.de).
-Or visit my blog: http://tector.wordpress.com
+Contact me via:
+
+* GitHub: https://github.com/tector
+* Twitter: @_tector
+* Email: mario.gehnke@yahoo.de
+* or visit my blog: http://tector.wordpress.com
 
 This tool is intended to be used in my browsergame project 'nouron'.
 So if you like you can visit the project under the following sources:
 
-Homepage:  www.nouron.de
-GitHub:    https://github.com/nouron/nouron
-Twitter:   @_nouron
-Facebook:  facebook.com/nouronbg
-Google+:   https://plus.google.com/106638531327318351915
+* Homepage:  www.nouron.de
+* GitHub:    https://github.com/nouron/nouron
+* Twitter:   @_nouron
+* Facebook:  facebook.com/nouronbg
+* Google+:   https://plus.google.com/106638531327318351915
 
 Thank you! :)
 

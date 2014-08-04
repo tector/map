@@ -2,10 +2,10 @@ $(document).ready( function() {
 
     ngm = {
         /* defaults */
-        systemsize: 50, // units
-        fieldsize: 10, // pixel
-        width: 700,
-        height: 700,
+        //systemsize: 50, // units
+        //fieldsize: 10, // pixel
+        //width: 700,
+        //height: 700,
 
         sprintf: function(format, etc)
         {
@@ -240,6 +240,48 @@ $(document).ready( function() {
             });
         },
         /**
+         * check if essential settings are given in config
+         */
+        _validateConfig: function(config)
+        {
+            var missingProperties = [];
+            if (!('dataSourceUri' in config)) {
+                missingProperties.push('dataSourceUri');
+            }
+            if (!('mode' in config)) {
+                missingProperties.push('mode');
+            }
+            if (!('selector' in config)) {
+                missingProperties.push('selector');
+            }
+            if (!('width' in config)) {
+                missingProperties.push('width');
+            }
+            if (!('height' in config)) {
+                missingProperties.push('height');
+            }
+            if (!('center' in config)) {
+                missingProperties.push('center');
+            }
+            if (!('scale' in config)) {
+                missingProperties.push('scale');
+            }
+            if (!('range' in config)) {
+                missingProperties.push('range');
+            }
+            if (!('layers' in config)) {
+                missingProperties.push('layers');
+            }
+
+
+            console.log(missingProperties);
+            if (missingProperties.length>0) {
+                var tmp = missingProperties.join(', ');
+                throw ("Missing configuration setting(s) for: " + tmp );
+            }
+
+        },
+        /**
          * initialize whole map for first time
          * create nine separate svg dom elements which are filled with loaded data
          *
@@ -247,6 +289,8 @@ $(document).ready( function() {
          */
         init: function(config)
         {
+            ngm._validateConfig(config);
+
             ngm.dataSourceUri = config.dataSourceUri;
             ngm.mode = config.mode;
             ngm.selector = config.selector;
@@ -257,11 +301,10 @@ $(document).ready( function() {
             ngm.scale = parseInt(config.scale);
             ngm.range = parseInt(config.range);
             ngm.layers = config.layers;
-            ngm.background_image_url = config.background_image_url;
-
+            ngm.backgroundImageUrl = config.backgroundImageUrl;
             console.log(ngm);
-            if (ngm.background_image_url != 'undefined') {
-                background = 'background-image: url('+ngm.background_image_url+')';
+            if (ngm.backgroundImageUrl != undefined) {
+                background = 'background-image: url('+ngm.backgroundImageUrl+')';
             } else {
                 background = '';
             }

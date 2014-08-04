@@ -14,6 +14,25 @@ $(document).ready( function() {
             return format.replace(/%((%)|s)/g, function (m) { return m[2] || arg[i++]; });
         },
 
+        makeDIV: function(attribs, value)
+        {
+            if (attribs === null) {
+                attribs = {};
+            }
+
+            var el = document.createElement('div');
+
+            for (var k in attribs) {
+                el.setAttribute(k, attribs[k]);
+            }
+
+            if (value) {
+                value = document.createTextNode(value);
+                el.appendChild(value);
+            }
+            return el;
+        },
+
         makeSVG: function(tag, attribs, value)
         {
             if (attribs === null) {
@@ -79,6 +98,9 @@ $(document).ready( function() {
         createGridSVGDom: function(direction)
         {
             var tpl = '<svg class="grid-svg %s" width="%spx" height="%spx" style="margin-left: %spx; margin-top: %spx;"></svg>';
+            if (ngm.mode == 'hybrid') {
+                var tpl2 = '<div class="grid-div %s" style="width: %spx; height: %spx; margin-left: %spx; margin-top: %spx;"></div>';
+            }
             var width  = ngm.range * ngm.scale;
             var height = ngm.range * ngm.scale;
 
@@ -136,7 +158,12 @@ $(document).ready( function() {
             }
 
             //console.log(ngm.sprintf(tpl, class_, width, height, margin_left, margin_top));
-            return ngm.sprintf(tpl, class_, width, height, margin_left, margin_top);
+            var tmp = ngm.sprintf(tpl, class_, width, height, margin_left, margin_top);
+            if (ngm.mode == 'hybrid') {
+                tmp += ngm.sprintf(tpl2, class_, width, height, margin_left, margin_top);
+            }
+            return tmp;
+
         },
         setNewCenterCoords: function(coordx, coordy)
         {
@@ -289,27 +316,39 @@ $(document).ready( function() {
                 //console.log(id);
                 switch (id) {
                     case 'push-east':
-                        $(selector + ' .grid-svg').each(function(){
-                            left = parseInt($(this).css('margin-left').replace('px', ''));
-                        });
+                        //$(selector + ' .grid-svg').each(function(){
+                            //left = parseInt($(this).css('margin-left').replace('px', ''));
+                        //});
+                        //$(selector + ' .grid-div').each(function(){
+                            //left = parseInt($(this).css('margin-left').replace('px', ''));
+                        //});
                         ngm.addSystems('east');
                         break;
                     case 'push-west':
-                        $(selector + ' .grid-svg').each(function(){
-                            left = parseInt($(this).css('margin-left').replace('px', ''));
-                        });
+                        //$(selector + ' .grid-svg').each(function(){
+                            //left = parseInt($(this).css('margin-left').replace('px', ''));
+                        //});
+                        //$(selector + ' .grid-div').each(function(){
+                            //left = parseInt($(this).css('margin-left').replace('px', ''));
+                        //});
                         ngm.addSystems('west');
                         break;
                     case 'push-north':
-                        $(selector + ' .grid-svg').each(function(){
-                            top = parseInt($(this).css('margin-top').replace('px', ''));
-                        });
+                        //$(selector + ' .grid-svg').each(function(){
+                            //top = parseInt($(this).css('margin-top').replace('px', ''));
+                        //});
+                        //$(selector + ' .grid-div').each(function(){
+                            //top = parseInt($(this).css('margin-top').replace('px', ''));
+                        //});
                         ngm.addSystems('north');
                         break;
                     case 'push-south':
-                        $(selector + ' .grid-svg').each(function(){
-                            top = parseInt($(this).css('margin-top').replace('px', ''));
-                        });
+                        //$(selector + ' .grid-svg').each(function(){
+                            //top = parseInt($(this).css('margin-top').replace('px', ''));
+                        //});
+                        //$(selector + ' .grid-div').each(function(){
+                            //top = parseInt($(this).css('margin-top').replace('px', ''));
+                        //});
                         ngm.addSystems('south');
                         break;
                     default:
@@ -317,10 +356,15 @@ $(document).ready( function() {
                 }
             });
 
-            $(".grid-svg").on('click', function(e) {
-                coords = ngm.toggleSelect(e);
-                //console.log(coords);
-            });
+            if (ngm.mode == 'svg') {
+                $(".grid-svg").on('click', function(e) {
+                    coords = ngm.toggleSelect(e);
+                });
+            } else {
+                $(".grid-div").on('click', function(e) {
+                    coords = ngm.toggleSelect(e);
+                });
+            }
         },
         /**
          *
@@ -329,37 +373,59 @@ $(document).ready( function() {
          */
         fillWithContent: function(direction, data)
         {
+            if (ngm.mode=='svg') {
+                class_ = '.grid-svg';
+            } else {
+                class_ = '.grid-div';
+            }
+
             switch (direction) {
                 case 'north-east':
-                    targetsvg = $('.grid-north.grid-east');
+                    targetsvg = $('.grid-svg.grid-north.grid-east');
+                    targetdiv = $('.grid-div.grid-north.grid-east');
                     break;
                 case 'east':
-                    targetsvg = $('.grid-east').not('.grid-north')
-                                               .not('.grid-south');
+                    targetsvg = $('.grid-svg.grid-east').not('.grid-north')
+                                                       .not('.grid-south');
+                    targetdiv = $('.grid-div.grid-east').not('.grid-north')
+                                                       .not('.grid-south');
                     break;
                 case 'south-east':
-                    targetsvg = $('.grid-south.grid-east');
+                    targetsvg = $('.grid-svg.grid-south.grid-east');
+                    targetdiv = $('.grid-div.grid-south.grid-east');
                     break;
                 case 'north-west':
-                    targetsvg = $('.grid-north.grid-west');
+                    targetsvg = $('.grid-svg.grid-north.grid-west');
+                    targetdiv = $('.grid-div.grid-north.grid-west');
                     break;
                 case 'west':
-                    targetsvg = $('.grid-west').not('.grid-north')
-                                               .not('.grid-south');
+                    targetsvg = $('.grid-svg.grid-west').not('.grid-north')
+                                                       .not('.grid-south');
+                    targetdiv = $('.grid-div.grid-west').not('.grid-north')
+                                                       .not('.grid-south');
                     break;
                 case 'south-west':
-                    targetsvg = $('.grid-south.grid-west');
+                    targetsvg = $('.grid-svg.grid-south.grid-west');
+                    targetdiv = $('.grid-div.grid-south.grid-west');
                     break;
                 case 'north':
-                    targetsvg = $('.grid-north').not('.grid-west')
-                                                .not('.grid-east');
+                    targetsvg = $('.grid-svg.grid-north').not('.grid-west')
+                                                        .not('.grid-east');
+                    targetdiv = $('.grid-div.grid-north').not('.grid-west')
+                                                        .not('.grid-east');
                     break;
                 case 'south':
-                    targetsvg = $('.grid-south').not('.grid-west')
-                                                .not('.grid-east');
+                    targetsvg = $('.grid-svg.grid-south').not('.grid-west')
+                                                        .not('.grid-east');
+                    targetdiv = $('.grid-div.grid-south').not('.grid-west')
+                                                        .not('.grid-east');
                     break;
                 case 'center':
                     targetsvg = $('.grid-svg').not('.grid-north')
+                                              .not('.grid-east')
+                                              .not('.grid-south')
+                                              .not('.grid-west');
+                    targetdiv = $('.grid-div').not('.grid-north')
                                               .not('.grid-east')
                                               .not('.grid-south')
                                               .not('.grid-west');
@@ -369,27 +435,32 @@ $(document).ready( function() {
             }
 
             ngm.drawGrid(targetsvg[0]);
-
-            var defsgroup = ngm.makeSVG('defs', {});
-            patternids = [];
-            for (var l=0; l<data.length; l++) {
-                class_ = data[l].attribs.class;
-                img_url = data[l].attribs.image_url;
-                if (patternids.indexOf(class_) == -1) {
-                    patternids.push(class_);
-                    pattern = ngm.makeSVG('pattern', {'id': class_,'patternUnits': 'userSpaceOnUse', 'width':ngm.scale, 'height':ngm.scale});
-                    image = ngm.makeSVG('image', {'xlink:href': img_url, 'x':'0', 'y':'0','width':ngm.scale,'height':ngm.scale});
-                    //image = ngm.makeSVG('circle', {'cx':'10', 'cy':'10','r':'10', 'style':'stroke: none;','xlink:href': img_url});
-                    pattern.appendChild(image);
-                    defsgroup.appendChild(pattern);
+            if (ngm.mode == 'svg') {
+                var defsgroup = ngm.makeSVG('defs', {});
+                patternids = [];
+                for (var l=0; l<data.length; l++) {
+                    class_ = data[l].attribs.class;
+                    img_url = data[l].attribs.image_url;
+                    if (patternids.indexOf(class_) == -1) {
+                        patternids.push(class_);
+                        pattern = ngm.makeSVG('pattern', {'id': class_,'patternUnits': 'userSpaceOnUse', 'width':ngm.scale, 'height':ngm.scale});
+                        image = ngm.makeSVG('image', {'xlink:href': img_url, 'x':'0', 'y':'0','width':ngm.scale,'height':ngm.scale});
+                        //image = ngm.makeSVG('circle', {'cx':'10', 'cy':'10','r':'10', 'style':'stroke: none;','xlink:href': img_url});
+                        pattern.appendChild(image);
+                        defsgroup.appendChild(pattern);
+                    }
                 }
-            }
 
-            targetsvg[0].appendChild(defsgroup);
+                targetsvg[0].appendChild(defsgroup);
+            }
 
             for (i=0; i<ngm.layers.length; i++) {
                 var objects = data.filter(function(elem){return elem.layer==i;});
-                ngm.drawLayerObjects(targetsvg[0], ngm.layers[i], objects);
+                if (ngm.mode == 'svg') {
+                    ngm.drawLayerObjects(targetsvg[0], ngm.layers[i], objects);
+                } else {
+                    ngm.drawLayerObjects(targetdiv[0], ngm.layers[i], objects);
+                }
             }
         },
         /**
@@ -398,6 +469,14 @@ $(document).ready( function() {
          * @param targetDomElement  svg dom element to draw inside
          */
         drawGrid: function(targetDomElement) {
+
+            if (targetDomElement.firstChild) {
+                var child = targetDomElement.firstChild;
+                if (child.hasClass('ngm-grid-layer')) {
+                    return;
+                }
+            }
+
             max = Math.floor(ngm.range/10) * ngm.scale;
 
             // horizontal lines
@@ -438,43 +517,72 @@ $(document).ready( function() {
          */
         drawLayerObjects: function(targetDomElement, layerConfig, layerObjects){
 
-            var group = ngm.makeSVG('g', {'class': layerConfig.class});
-            if (layerConfig.objectDefaultShape == 'circle') {
-                for (var i=0; i<layerObjects.length; i++) {
-                    var r = 0.5;
-                    var m = 0.5 * ngm.range;
-                    attribs = layerObjects[i].attribs;
-                    group.appendChild(ngm.makeSVG('circle', {
-                        'title': attribs.title+'('+layerObjects[i].x+','+layerObjects[i].y+')',
-                        'cx': ((parseInt(layerObjects[i].x) + r + m ) % ngm.range) * ngm.scale,
-                        'cy': ((parseInt(layerObjects[i].y) + r + m ) % ngm.range) * ngm.scale,
-                        'r':  r * ngm.scale,
-                        'fill': 'url(#'+attribs.class+')',
-                        'stroke-width': '1',
-                        'stroke': "#333",
-                        'data-x': layerObjects[i].x,
-                        'data-y': layerObjects[i].y
-                    }));
+            if (ngm.mode == 'svg') {
+
+                var group = ngm.makeSVG('g', {'class': layerConfig.class});
+                if (layerConfig.objectDefaultShape == 'circle') {
+
+                    for (var i=0; i<layerObjects.length; i++) {
+                        var r = 0.5;
+                        var m = 0.5 * ngm.range;
+                        attribs = layerObjects[i].attribs;
+                        group.appendChild(ngm.makeSVG('circle', {
+                            'title': attribs.title+'('+layerObjects[i].x+','+layerObjects[i].y+')',
+                            'cx': ((parseInt(layerObjects[i].x) + r + m ) % ngm.range) * ngm.scale,
+                            'cy': ((parseInt(layerObjects[i].y) + r + m ) % ngm.range) * ngm.scale,
+                            'r':  r * ngm.scale,
+                            'fill': 'url(#'+attribs.class+')',
+                            'stroke-width': '1',
+                            'stroke': "#333",
+                            'data-x': layerObjects[i].x,
+                            'data-y': layerObjects[i].y
+                        }));
+                    }
+
+                } else {
+
+                    for (var j=0; j<layerObjects.length; j++) {
+                        attribs = layerObjects[j].attribs;
+                        var m = 0.5 * ngm.range;
+                        group.appendChild(ngm.makeSVG('rect', {
+                            'title': attribs.title,
+                            'x': ((parseInt(layerObjects[j].x) + m ) % ngm.range) * ngm.scale,
+                            'y': ((parseInt(layerObjects[j].y) + m ) % ngm.range) * ngm.scale,
+                            'width': ngm.scale,
+                            'height': ngm.scale,
+                            'fill': 'url(#'+attribs.class+')',
+                            'stroke-width': '0',
+                            'stroke': "#555",
+                            'data-x': layerObjects[j].x,
+                            'data-y': layerObjects[j].y
+                        }));
+                    }
                 }
+                targetDomElement.appendChild(group);
+
             } else {
+
+                var group = ngm.makeDIV({'class': layerConfig.class});
                 for (var j=0; j<layerObjects.length; j++) {
                     attribs = layerObjects[j].attribs;
                     var m = 0.5 * ngm.range;
-                    group.appendChild(ngm.makeSVG('rect', {
+                    var x = ((parseInt(layerObjects[j].x) + m ) % ngm.range) * ngm.scale;
+                    var y = ((parseInt(layerObjects[j].y) + m ) % ngm.range) * ngm.scale;
+                    var style = "position: absolute; left: "+x+'px; top: '+y+'px; width:'+ngm.scale+'px; height:'+ngm.scale+'px;';
+                    if ("image_url" in attribs) {
+                        style += 'background-image: url('+attribs.image_url+'); background-size:'+ngm.scale+'px;';
+                    }
+
+                    group.appendChild(ngm.makeDIV({
                         'title': attribs.title,
-                        'x': ((parseInt(layerObjects[j].x) + m ) % ngm.range) * ngm.scale,
-                        'y': ((parseInt(layerObjects[j].y) + m ) % ngm.range) * ngm.scale,
-                        'width': ngm.scale,
-                        'height': ngm.scale,
-                        'fill': 'url(#'+attribs.class+')',
-                        'stroke-width': '0',
-                        'stroke': "#555",
                         'data-x': layerObjects[j].x,
-                        'data-y': layerObjects[j].y
+                        'data-y': layerObjects[j].y,
+                        'class': attribs.class,
+                        'style': style
                     }));
                 }
+                targetDomElement.appendChild(group);
             }
-            targetDomElement.appendChild(group);
         },
         /**
          * this will load and add new systems (3 at a time) for the given direction
@@ -486,7 +594,7 @@ $(document).ready( function() {
             var map = $(selector);
             var delta = ngm.range;
             if (direction == 'east') {
-                $('.grid-svg').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
+                $('.grid-svg,.grid-div').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
                 $(selector+' #field-selector').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
                 ngm.coordx = ngm.coordx+delta;
                 console.log('new center xy:', ngm.coordx, ngm.coordy);
@@ -495,7 +603,7 @@ $(document).ready( function() {
                     // delete west
                     $('.grid-west').remove();
                     // center -> west
-                    elements = document.querySelectorAll('.grid-svg:not(.grid-west):not(.grid-east)');
+                    elements = document.querySelectorAll('.grid-svg:not(.grid-west):not(.grid-east),.grid-div:not(.grid-west):not(.grid-east)');
                     for (i=0; i<elements.length; i++) {
                         oldclass = elements[i].getAttribute('class');
                         newclass = oldclass + ' grid-west';
@@ -525,7 +633,7 @@ $(document).ready( function() {
 
             } else if (direction == 'west') {
 
-                $('.grid-svg').animate({marginLeft: "+="+delta*ngm.scale+'px'}, 500);
+                $('.grid-svg,.grid-div').animate({marginLeft: "+="+delta*ngm.scale+'px'}, 500);
                 $(selector +' #field-selector').animate({marginLeft: "+="+delta*ngm.scale+'px'}, 500);
                 ngm.coordx = ngm.coordx-delta;
                 console.log('new center xy:', ngm.coordx, ngm.coordy);
@@ -564,7 +672,7 @@ $(document).ready( function() {
 
             } else if (direction == 'north') {
 
-                $('.grid-svg').animate({marginTop: "+="+delta*ngm.scale+'px'}, 500);
+                $('.grid-svg,.grid-div').animate({marginTop: "+="+delta*ngm.scale+'px'}, 500);
                 $(selector+' #field-selector').animate({marginTop: "+="+delta*ngm.scale+'px'}, 500);
                 ngm.coordy = ngm.coordy-delta;
                 console.log('new center xy:', ngm.coordx, ngm.coordy);
@@ -603,7 +711,7 @@ $(document).ready( function() {
 
             } else if (direction == 'south') {
 
-                $('.grid-svg').animate({marginTop: "-="+delta*ngm.scale+'px'}, 500);
+                $('.grid-svg,.grid-div').animate({marginTop: "-="+delta*ngm.scale+'px'}, 500);
                 $(selector+' #field-selector').animate({marginTop: "-="+delta*ngm.scale+'px'}, 500);
                 ngm.coordy = ngm.coordy+delta;
                 console.log('new center xy:', ngm.coordx, ngm.coordy);
@@ -641,28 +749,28 @@ $(document).ready( function() {
                 }, 500);
             }
         },
-        removeSystem: function(direction) {
+//        removeSystem: function(direction) {
+//
+//        },
 
-        },
-
-        exportMap: function() {
-            var objects_data = [];
-            $('.ngm svg g').children().each(function(i, item){
-                var layer_class = $(this).parent().attr('class');
-                if (this.tagName == 'rect' || this.tagName == 'circle') {
-                    objects_data.push({
-                        'attr': {
-                            'class' : $(this).attr('class'),
-                            'title' : $(this).attr('title'),
-                            'image_url': $(this).attr('image_url')
-                        },
-                        'x' : $(this).data('x'),
-                        'y' : $(this).data('y')
-                    });
-                }
-            });
-            return objects_data;
-        }
+//        exportMap: function() {
+//            var objects_data = [];
+//            $('.ngm svg g').children().each(function(i, item){
+//                var layer_class = $(this).parent().attr('class');
+//                if (this.tagName == 'rect' || this.tagName == 'circle') {
+//                    objects_data.push({
+//                        'attr': {
+//                            'class' : $(this).attr('class'),
+//                            'title' : $(this).attr('title'),
+//                            'image_url': $(this).attr('image_url')
+//                        },
+//                        'x' : $(this).data('x'),
+//                        'y' : $(this).data('y')
+//                    });
+//                }
+//            });
+//            return objects_data;
+//        }
     };
 
 });

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nouron Galaxy Map Test</title>
     <link href="../../css/ngm.css" rel="stylesheet">
+    <link href="css/sprites.css" rel="stylesheet">
     <style>
         * {margin:0; padding:0;}
         html, body {height: 100%; width: 100%;}
@@ -22,34 +23,21 @@
     <script>
         $(document).ready( function() {
             ngm.init({
-                // the local dummydata.json file is for simple test cases but only works in firefox!
-                // it is recommended to set a url here which returns json data:
-                'dataSourceUri': "data/dummydata.json",
-                // the jquery selector for the container dom element
+                'mode': 'hybrid',
+                'dataSourceUri': "data/dummydata-hybrid-with-sprites.json",
                 'selector': '#ngm-map',
-                //
                 'width': '500px',
                 'height': '500px',
-                // center coordinates - all other coordinates are calculated on
-                // these values as base
                 'center' : [1220, 1220],
-                //
-                'scale' : 30, // pix width of one field unit
-                //
+                'scale' : 30,
                 'range' : 10,
-                //
                 'layers': [
                     {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
                     {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},
                     {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square'},
                     {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
                 ],
-                //
-                'background_image_url': 'img/starfield_blue.jpg'
-                // TODO:
-                // - object outlines = true/false
-                // - image folder
-                // - colors of raster lines
+                'background_image_url': 'img/starfield_blue.jpg',
             });
         })
     </script>

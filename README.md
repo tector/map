@@ -3,6 +3,10 @@ Nouron Galaxy Map
 
 Nouron Galaxy Map is a javascript generated dynamic SVG map for browsergames
 
+Requirements
+------------
+- a modern browser that supports HTML5, CSS3 and SVG (all modern major browsers should fullfill this requirements)
+- jQuery
 
 Quickstart
 ----------
@@ -59,7 +63,7 @@ The *result json* has to have the following contents.
 * layer (optional)
 * attribs (optional)
 
-**Example:**
+**Example (hybrid mode, using css sprites):**
 
 ```json
 [{"layer": 1, "x": 1199, "y": 1199, "attribs":{"title":"nw-test", "class": "planet"}},
@@ -85,7 +89,7 @@ The *result json* has to have the following contents.
 
 **Execute map examples:**
 
-currently ./dummydata.json is included for testing purposes. No x and y given.
+currently ./dummydata-svg.json is included for testing purposes. No x and y given.
 
 :exclamation: ATTENTION: if you want to test the examples locally and you have
 no webserver like apache or nginx running you have to start a simple development
@@ -101,6 +105,14 @@ have build in. (see: http://en.wikipedia.org/wiki/Same-origin_policy)
 
 # then navigate your browser to http://localhost:10000/examples/galaxy_map
 ```
+
+#### mode
+
+Mode can be pure 'svg' or 'hybrid' (svg/html). If you want to use css sprites you have to use 'hybrid' mode.
+It is recommended to use 'hybrid' mode with css sprites to minimize http requests.
+
+TIP: look at the examples to get an idea of the different modes
+
 
 #### selector
 
@@ -144,11 +156,6 @@ don't be confused with that:
 
 this ascii square symbolize one SVG DOM element:
 
-```html
-<svg class="grid-svg">...</svg>
-```
-
-
 <pre>
 +-------------+
 |             |
@@ -159,6 +166,10 @@ this ascii square symbolize one SVG DOM element:
 |             |
 +-------------+
 </pre>
+
+```html
+<svg class="grid-svg">...</svg>
+```
 
 the full map consists of 9 separate SVG DOM elements:
 
@@ -203,6 +214,29 @@ the full map consists of 9 separate SVG DOM elements:
 +-------------++-------------++-------------+
 </pre>
 
+**note:**
+In hybrid mode there will be a separate <div> tag for each <svg> tag.
+
+Contact & Background
+--------------------
+
+If you use this tool i would appreciate a tiny note from you!
+Contact me via Twitter @_tector or email (mario.gehnke@yahoo.de).
+Or visit my blog: http://tector.wordpress.com
+
+This tool is intended to be used in my browsergame project 'nouron'.
+So if you like you can visit the project under the following sources:
+
+Homepage:  www.nouron.de
+GitHub:    https://github.com/nouron/nouron
+Twitter:   @_nouron
+Facebook:  facebook.com/nouronbg
+Google+:   https://plus.google.com/106638531327318351915
+
+Thank you! :)
+
+
 License
 -------
-This software is licensed under MIT License. See license.md for details.
+
+This software is licensed under MIT License. See LICENSE for details.

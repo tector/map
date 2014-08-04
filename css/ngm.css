@@ -3,13 +3,14 @@
     display:block; position:absolute; top: 50%; left: 50%; margin-left: -50%; margin-top: -50%; outline: 1px solid black; overflow: hidden; background-color: #111;
 }
 
-.ngm .grid-svg {
+.ngm .grid-svg,
+.ngm .grid-div {
     position:absolute; top: 50%; left: 50%; display: block; outline: 1px solid #888;
 }
 
-.ngm .ngm-grid-layer {z-index: 0}
-.ngm .ngm-planets-layer{z-index: 1000}
-.ngm .ngm-misc-layer {z-index:500}
+.ngm .ngm-grid-layer {z-index: 0; position: absolute;}
+.ngm .ngm-planets-layer{z-index: 1000; position: absolute;}
+.ngm .ngm-misc-layer {z-index:500; position: absolute;}
 
 .ngm .misc {z-index:500;}
 .ngm .planet {z-index:1022;}
@@ -38,5 +39,3 @@
 
 #ngm-editor .object.selected{outline:2px solid red;}
 
-.ngm .planet {background-repeat:no-repeat;background-size: 100%;}
-.ngm .planetary-1 {background-image: url(planetaries/1.png);}

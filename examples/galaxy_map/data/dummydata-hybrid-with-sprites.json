@@ -1,0 +1,47 @@
+[
+{"layer": 1, "x": 1215, "y": 1215, "attribs":{"title":"test a", "class":"sprites planet-1"}},
+{"layer": 1, "x": 1216, "y": 1216, "attribs":{"title":"test b", "class":"sprites planet-2"}},
+{"layer": 1, "x": 1217, "y": 1217, "attribs":{"title":"test c", "class":"sprites planet-3"}},
+{"layer": 1, "x": 1218, "y": 1218, "attribs":{"title":"test d", "class":"sprites planet-4"}},
+{"layer": 1, "x": 1219, "y": 1219, "attribs":{"title":"test e", "class":"sprites planet-5"}},
+{"layer": 1, "x": 1220, "y": 1220, "attribs":{"title":"test f", "class":"sprites planet-6"}},
+{"layer": 1, "x": 1221, "y": 1221, "attribs":{"title":"test g", "class":"sprites planet-7"}},
+{"layer": 1, "x": 1222, "y": 1222, "attribs":{"title":"test h", "class":"sprites planet-8"}},
+{"layer": 1, "x": 1223, "y": 1223, "attribs":{"title":"test i", "class":"sprites planet-9"}},
+{"layer": 1, "x": 1224, "y": 1224, "attribs":{"title":"test j", "class":"sprites planet-10"}},
+
+{"layer": 1, "x": 1222, "y": 1216, "attribs":{"title":"test j", "class":"sprites planet-10"}},
+
+
+{"layer": 0, "x": 1215, "y": 1222, "attribs":{"title":"xxx", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1215, "y": 1223, "attribs":{"title":"yyy", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1215, "y": 1224, "attribs":{"title":"zzz", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1216, "y": 1223, "attribs":{"title":"yyy", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1216, "y": 1224, "attribs":{"title":"zzz", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1217, "y": 1224, "attribs":{"title":"zzz", "class":"sprites asteroids-1"}},
+
+{"layer": 0, "x": 1222, "y": 1215, "attribs":{"title":"yyyy", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1223, "y": 1215, "attribs":{"title":"yyyy", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1223, "y": 1216, "attribs":{"title":"yyyy", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1224, "y": 1215, "attribs":{"title":"xxxx", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1224, "y": 1216, "attribs":{"title":"yyyy", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1224, "y": 1217, "attribs":{"title":"xxxx", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1225, "y": 1215, "attribs":{"title":"xxxx", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1225, "y": 1216, "attribs":{"title":"xxxx", "class":"sprites asteroids-1"}},
+{"layer": 0, "x": 1226, "y": 1215, "attribs":{"title":"xxxx", "class":"sprites asteroids-1"}},
+
+{"layer": 0, "x": 1219, "y": 1215, "attribs":{"title":"xxxx", "class":"sprites fog-blue"}},
+{"layer": 0, "x": 1220, "y": 1215, "attribs":{"title":"xxxx", "class":"sprites fog-blue"}},
+{"layer": 0, "x": 1221, "y": 1215, "attribs":{"title":"xxxx", "class":"sprites fog-blue"}},
+{"layer": 0, "x": 1221, "y": 1215, "attribs":{"title":"xxx", "class":"sprites asteroids-1"}},
+
+{"layer": 0, "x": 1220, "y": 1216, "attribs":{"title":"yyyy", "class":"sprites fog-green"}},
+{"layer": 0, "x": 1221, "y": 1216, "attribs":{"title":"yyyy", "class":"sprites fog-green"}},
+{"layer": 0, "x": 1222, "y": 1216, "attribs":{"title":"yyyy", "class":"sprites fog-green"}},
+{"layer": 0, "x": 1222, "y": 1216, "attribs":{"title":"xxx", "class":"sprites asteroids-1"}},
+
+{"layer": 0, "x": 1221, "y": 1217, "attribs":{"title":"xxxx", "class":"sprites fog-red"}},
+{"layer": 0, "x": 1222, "y": 1217, "attribs":{"title":"xxxx", "class":"sprites fog-red"}},
+{"layer": 0, "x": 1223, "y": 1217, "attribs":{"title":"xxxx", "class":"sprites fog-red"}},
+{"layer": 0, "x": 1223, "y": 1217, "attribs":{"title":"xxx", "class":"sprites asteroids-1"}}
+]

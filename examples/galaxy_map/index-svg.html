@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nouron Galaxy Map Test</title>
+    <link href="../../css/ngm.css" rel="stylesheet">
+    <style>
+        * {margin:0; padding:0;}
+        html, body {height: 100%; width: 100%;}
+    </style>
+  </head>
+  <body>
+
+    <div style="margin-left:50px;margin-top:50px;height:765px;width:765px;position:relative;">
+        <div id="ngm-map"></div>
+    </div>
+
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../js/ngm.js"></script>
+    <script>
+        $(document).ready( function() {
+            ngm.init({
+                'mode': 'svg',
+                'dataSourceUri': "data/dummydata-svg.json",
+                'selector': '#ngm-map',
+                'width': '500px',
+                'height': '500px',
+                'center' : [1220, 1220],
+                'scale' : 30,
+                'range' : 10,
+                'layers': [
+                    {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
+                    {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},
+                    {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square'},
+                    {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
+                ],
+                'background_image_url': 'img/starfield_blue.jpg',
+            });
+        })
+    </script>
+  </body>
+</html>

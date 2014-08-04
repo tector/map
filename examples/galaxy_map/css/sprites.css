@@ -1,0 +1,23 @@
+.sprites { background: url(../img/sprites.png) no-repeat;background-size: 100%;}
+.planet-1 { width: 100px; height: 100px; background-position: 0 0; }
+.planet-2 { width: 100px; height: 100px; background-position: 0 4.7%; }
+.planet-3 { width: 100px; height: 100px; background-position: 0 9.4%; }
+.planet-4 { width: 100px; height: 100px; background-position: 0 14.2%; }
+.planet-5 { width: 100px; height: 100px; background-position: 0 19.0%; }
+.planet-6 { width: 100px; height: 100px; background-position: 0 23.8%; }
+.planet-7 { width: 100px; height: 100px; background-position: 0 28.5%; }
+.planet-8 { width: 100px; height: 100px; background-position: 0 33.3%; }
+.planet-9 { width: 100px; height: 100px; background-position: 0 38.0.%; }
+.planet-10 { width: 100px; height: 100px; background-position: 0 43.0%; }
+.planet-11 { width: 100px; height: 100px; background-position: 0 48.0.%; }
+.asteroids-1 { width: 100px; height: 100px; background-position: 0 52.4%; }
+.asteroids-1-brown { width: 100px; height: 100px; background-position: 0 57.5%; }
+.asteroids-2 { width: 100px; height: 100px; background-position: 0 62.5%; }
+.asteroids-2-brown { width: 100px; height: 100px; background-position: 0 67.5%; }
+.fog-blue { width: 100px; height: 100px; background-position: 0 71.5%; }
+.fog-cyan { width: 100px; height: 100px; background-position: 0 76.5%; }
+.fog-green { width: 100px; height: 100px; background-position: 0 81.0%; }
+.fog-grey { width: 100px; height: 100px; background-position: 0 85.5%; }
+.fog-magenta { width: 100px; height: 100px; background-position: 0 90.0%; }
+.fog-red { width: 100px; height: 100px; background-position: 0 95.3%; }
+.fog-yellow { width: 100px; height: 100px; background-position: 0 99.0%; }

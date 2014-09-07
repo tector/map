@@ -3,9 +3,8 @@
     display:block; position:absolute; top: 50%; left: 50%; margin-left: -50%; margin-top: -50%; outline: 1px solid black; overflow: hidden; background-color: #111;
 }
 
-.ngm .grid-svg,
 .ngm .grid-div {
-    position:absolute; top: 50%; left: 50%; display: block; outline: 1px solid #888;
+    position:absolute; top: 50%; left: 50%; display: block; outline: 1px dotted #333;
 }
 
 .ngm .ngm-grid-layer {z-index: 0; position: absolute;}

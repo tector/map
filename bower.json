@@ -1,14 +1,13 @@
 {
   "name": "ngm",
   "version": "master",
-  "homepage": "https://github.com/tector/ngm",
+  "homepage": "https://github.com/tector/map",
   "authors": [
     "Mario Gehnke <mario.gehnke@yahoo.de>"
   ],
-  "description": "2d SVG map for use in browsergames generated with javascript",
+  "description": "simple 2d map for use in browsergames generated with javascript",
   "main": "js/ngm.js",
   "keywords": [
-    "svg",
     "map",
     "javascript",
     "browsergame"

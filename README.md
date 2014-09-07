@@ -1,3 +1,5 @@
+:exclamation: ATTENTION: This repository is a fork of the SVG map version: This README is not yet updated!
+
 Nouron Galaxy Map
 =================
 

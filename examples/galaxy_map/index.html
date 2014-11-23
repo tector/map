@@ -26,13 +26,11 @@
                 //'dataSourceUri': "data/dummydata-hybrid-with-sprites.json",
                 'dataSourceUri': "data/test.json",
                 'selector': '#ngm-map',
-                //'width': '500px',
-                //'height': '500px',
                 'center' : [1220, 1220],
                 'layers': [
-                    {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
-                    {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},
-                    {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square'},
+                    {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square', 'cache':'enabled'},
+                    {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle', 'cache': 'enabled'},
+                    {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square', 'cache': 'enabled'},
                     {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
                 ],
                 'borderWidth': '1px',

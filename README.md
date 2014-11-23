@@ -1,9 +1,7 @@
-:exclamation: ATTENTION: This repository is a fork of the SVG map version: This README is not yet updated!
-
 Nouron Galaxy Map
 =================
 
-Nouron Galaxy Map is a javascript generated dynamic SVG map for browsergames
+Nouron Galaxy Map is a javascript generated dynamic 2d map for browsergames
 
 Requirements
 ------------
@@ -25,21 +23,26 @@ inlucde ngm.js at the end of html and execute init method with your desired sett
 <script src="ngm.js"></script>
 <script>
     $(document).ready( function() {
-        ngm.init({
+        // first configure the map settings
+        ngm.configurate({
             'dataSourceUri': "./dummydata.json", // data source - see description below
-            'selector': '#ngm-map', // jquery selector to load content inside; set your chosen id here!
-            'width': '700px',
-            'height': '700px',
-            'center' : [1225, 1225], // absolute current center (these are business coords - not page coords!)
-            'scale' : 10, // pix width of one field unit
-            'range' : 50, // how many field units has one map (horizontal)
-            'layers': [ // optional
-                {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
-                {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},
-                {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square'},
+            'selector': '#ngm-map',  // jquery selector to load content inside; set your chosen id here!
+            'center' : [1220, 1220], // absolute current center (these are business coords - not page coords!)
+            'layers': [// optional
+                {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square', 'cache':'enabled'},
+                {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle', 'cache': 'enabled'},
+                {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square', 'cache': 'enabled'},
                 {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
-            ]
+            ],
+            'borderWidth': '1px',
+            'borderColor': '#999',
+            'backgroundImageUrl': 'img/starfield_blue.jpg',
         });
+
+        // now init the map with default or given scale and range
+        var scale = 10; // pix width of one field unit
+        var range = 50; // how many field units has one map (horizontal)
+        ngm.init(scale, range);
     })
 </script>
 ```
@@ -65,7 +68,7 @@ The *result json* has to have the following contents.
 * layer (optional)
 * attribs (optional)
 
-**Example (hybrid mode, using css sprites):**
+**Example (using css sprites classes):**
 
 ```json
 [{"layer": 1, "x": 1199, "y": 1199, "attribs":{"title":"nw-test", "class": "planet"}},
@@ -91,7 +94,7 @@ The *result json* has to have the following contents.
 
 **Execute map examples:**
 
-currently ./dummydata-svg.json is included for testing purposes. No x and y given.
+currently ./dummydata.json is included for testing purposes. No x and y given.
 
 :exclamation: ATTENTION: if you want to test the examples locally and you have
 no webserver like apache or nginx running you have to start a simple development
@@ -108,23 +111,11 @@ have build in. (see: http://en.wikipedia.org/wiki/Same-origin_policy)
 # then navigate your browser to http://localhost:10000/examples/galaxy_map
 ```
 
-#### mode
-
-Mode can be pure 'svg' or 'hybrid' (svg/html). If you want to use css sprites you have to use 'hybrid' mode.
-It is recommended to use 'hybrid' mode with css sprites to minimize http requests.
-
-TIP: look at the examples to get an idea of the different modes
-
-
 #### selector
 
 You define a map container div in your html. This div will have a selector to be identified.
 It is up to you to choose an id or a class but it is purposed to use an id like '#ngm-map'.
 The div should not have any other attributes then the selector, otherwise it is possible that important attributes are overwritten with wrong values..
-
-#### width and height
-
-width and height of the map container div. Don't forget to give the unit type, e.g. '700px' (currently only pixel units are supported)
 
 #### center
 
@@ -162,7 +153,7 @@ this ascii square symbolize one SVG DOM element:
 +-------------+
 |             |
 |             |
-|     SVG     |
+|     DIV     |
 |             |
 |             |
 |             |
@@ -170,22 +161,22 @@ this ascii square symbolize one SVG DOM element:
 </pre>
 
 ```html
-<svg class="grid-svg">...</svg>
+<div class="grid-div">...</div>
 ```
 
 the full map consists of 9 separate SVG DOM elements:
 
 ```html
 <div class="ngm" data-height="700px" data-width="700px">
-    <svg class="grid-svg grid-north grid-west">...</svg>
-    <svg class="grid-svg grid-north">...</svg>
-    <svg class="grid-svg grid-north grid-east">...</svg>
-    <svg class="grid-svg grid-west">...</svg>
-    <svg class="grid-svg">...</svg>
-    <svg class="grid-svg grid-east">...</svg>
-    <svg class="grid-svg grid-south grid-west">...</svg>
-    <svg class="grid-svg grid-south">...</svg>
-    <svg class="grid-svg grid-south grid-east">...</svg>
+    <svg class="grid-div grid-north grid-west">...</svg>
+    <svg class="grid-div grid-north">...</svg>
+    <svg class="grid-div grid-north grid-east">...</svg>
+    <svg class="grid-div grid-west">...</svg>
+    <svg class="grid-div">...</svg>
+    <svg class="grid-div grid-east">...</svg>
+    <svg class="grid-div grid-south grid-west">...</svg>
+    <svg class="grid-div grid-south">...</svg>
+    <svg class="grid-div grid-south grid-east">...</svg>
 </div>
 ```
 
@@ -215,9 +206,6 @@ the full map consists of 9 separate SVG DOM elements:
 |             ||             ||             |
 +-------------++-------------++-------------+
 </pre>
-
-**note:**
-In hybrid mode there will be a separate div tag for each svg tag.
 
 Contact & Background
 --------------------

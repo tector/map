@@ -10,26 +10,25 @@
     <style>
         * {margin:0; padding:0;}
         html, body {height: 100%; width: 100%;}
+        #ngm-map {width:100%; height:100%; overflow:hidden;}
     </style>
   </head>
   <body>
 
-    <div style="margin-left:50px;margin-top:50px;height:765px;width:765px;position:relative;">
-        <div id="ngm-map"></div>
-    </div>
+    <div id="ngm-map"></div>
 
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../../js/ngm.js"></script>
     <script>
-        $(document).ready( function() {
-            ngm.init({
-                'dataSourceUri': "data/dummydata-hybrid-with-sprites.json",
+    $(document).ready(function(){
+
+        var config = {
+                //'dataSourceUri': "data/dummydata-hybrid-with-sprites.json",
+                'dataSourceUri': "data/test.json",
                 'selector': '#ngm-map',
-                'width': '500px',
-                'height': '500px',
+                //'width': '500px',
+                //'height': '500px',
                 'center' : [1220, 1220],
-                'scale' : 30,
-                'range' : 10,
                 'layers': [
                     {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square'},
                     {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle'},
@@ -39,8 +38,16 @@
                 'borderWidth': '1px',
                 'borderColor': '#999',
                 'backgroundImageUrl': 'img/starfield_blue.jpg',
-            });
-        })
+            }
+
+        ngm.configurate(config);
+        ngm.init();
+
+        window.onresize = function(event) {
+            console.log("resize");
+            ngm.init();
+        };
+    });
     </script>
   </body>
 </html>

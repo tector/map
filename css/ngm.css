@@ -1,6 +1,15 @@
 /** MAP **/
 .ngm {
-    display:block; position:absolute; top: 50%; left: 50%; margin-left: -50%; margin-top: -50%; outline: 1px solid black; overflow: hidden; background-color: #111;
+    /*display: block; position:absolute; top: 50%; left: 50%; margin-left: -50%; margin-top: -50%; outline: 1px solid black; overflow: hidden; background-color: #111;*/
+    width: 100%;
+    height: 100%;
+    outline: 1px solid black; overflow: hidden; background-color: #111;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center; /* align items in Main Axis */
+    align-items: stretch; /* align items in Cross Axis */
+    align-content: stretch; /* Extra space in Cross Axis */
 }
 
 .ngm .grid-div {
@@ -18,17 +27,23 @@
     cursor: pointer; outline: 1px solid white;
 }
 
-.ngm .grid-push {
-    display:block; position:absolute; border: 1px solid #555; height: 5%; width: 5%; background-color: #333; color: #fff; font-size: 1.5em; text-align: center; margin:0; padding:0; z-index: 1023;
+.ngm .grid-push,
+.ngm .zoom-tool {
+    display:block; position:absolute; border: 1px solid #555; height: 40px; width: 40px; line-height:40px; background-color: #333; color: #fff; font-size: 30px; text-align: center; margin:0; padding:0; z-index: 1023;
 }
-.ngm .grid-push:hover { cursor: pointer; background-color: #444;}
+.ngm .grid-push:hover,
+.ngm .zoom-tool:hover { cursor: pointer; background-color: #444;}
 
 .ngm .grid-push-north{top: 0; left:50%;margin-left:-10%;width:20%; border-radius: 0 0 10px 10px;}
 .ngm .grid-push-west{top: 50%; left:0;margin-top:-10%; border-radius: 0 10px 10px 0;line-height:100%; padding: 10% 0;}
-.ngm .grid-push-east{top: 50%; left:100%;margin-top:-10%;margin-left:-5%; border-radius: 10px 0 0 10px;line-height:100%; padding:10% 0;}
-.ngm .grid-push-south{top: 100%; left:50%;margin-top:-5%;margin-left:-10%;width:20%; border-radius: 10px 10px 0 0;}
+.ngm .grid-push-east{top: 50%; right:0;margin-top:-10%;margin-left:-5%; border-radius: 10px 0 0 10px;line-height:100%; padding:10% 0;}
+.ngm .grid-push-south{bottom: 0; left:50%;margin-top:-5%;margin-left:-10%;width:20%; border-radius: 10px 10px 0 0;}
 
-.ngm #field-selector {display:block; position:absolute;border:1px dotted #eee;z-index:1025;}
+.ngm #zoom-in {top: 5px; right:5px;border-radius: 10px}
+.ngm #zoom-out {top: 5px; right: 60px;border-radius: 10px}
+
+.ngm #field-selector,
+.ngm #field-indicator {display:block; position:absolute;border:1px dotted #eee;z-index:1025;}
 
 /** EDITOR **/
 

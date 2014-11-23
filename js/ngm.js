@@ -33,6 +33,33 @@ $(document).ready( function() {
             return el;
         },
 
+        moveIndicator: function(e)
+        {
+            var range = ngm.range;
+            var scale = ngm.scale;
+            var xMin = Math.floor(ngm.coordx - ngm.range/2);
+            var yMin = Math.floor(ngm.coordy - ngm.range/2);
+
+            var selector = ngm.selector + ' .ngm';
+            //console.log(selector);
+            map_offset_left = Math.floor($(selector).offset().left);
+            map_offset_top  = Math.floor($(selector).offset().top);
+            center_div_left = Math.floor($(selector + " .grid-div:nth(4)").offset().left);
+            center_div_top  = Math.floor($(selector + " .grid-div:nth(4)").offset().top);
+
+            x = xMin + Math.floor((e.pageX - center_div_left) / scale);
+            y = yMin + Math.floor((e.pageY - center_div_top) / scale);
+
+            left = center_div_left + (x - xMin) * scale - map_offset_left;
+            top_ = center_div_top  + (y - yMin) * scale - map_offset_top;
+
+            $(selector + ' #field-indicator').remove();
+            $(selector).append('<div id="field-indicator" style="top:'+top_+'px; left:'+left+'px; width:'+scale+'px; height:'+scale+'px;"><!-- --></div>');
+            console.log('['+x+','+y+',0]');
+
+            return '['+x+','+y+',0]';
+        },
+
         /**
          * calculate and (re)positioning the field selector
          *
@@ -196,12 +223,12 @@ $(document).ready( function() {
             if (!('selector' in config)) {
                 missingProperties.push('selector');
             }
-            if (!('width' in config)) {
-                missingProperties.push('width');
-            }
-            if (!('height' in config)) {
-                missingProperties.push('height');
-            }
+//            if (!('width' in config)) {
+//                missingProperties.push('width');
+//            }
+//            if (!('height' in config)) {
+//                missingProperties.push('height');
+//            }
             if (!('center' in config)) {
                 missingProperties.push('center');
             }
@@ -215,36 +242,56 @@ $(document).ready( function() {
                 missingProperties.push('layers');
             }
 
-
-            console.log(missingProperties);
+            //console.log(missingProperties);
             if (missingProperties.length>0) {
                 var tmp = missingProperties.join(', ');
                 throw ("Missing configuration setting(s) for: " + tmp );
             }
 
         },
-        /**
-         * initialize whole map for first time
-         * create nine separate div elements which are filled with loaded data
-         *
-         * @param config: array of configuration options
-         */
-        init: function(config)
+
+        configurate: function(config)
         {
+            if (isNaN(config['scale']) || isNaN(config['range'])) {
+                config['width'] = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
+                config['height'] = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
+                config['scale'] = Math.round((config['height'] / 100) * 60 / 10);
+                config['range'] = 10;
+            }
+
             ngm._validateConfig(config);
 
             ngm.dataSourceUri = config.dataSourceUri;
             ngm.mode = config.mode;
             ngm.selector = config.selector;
-            ngm.width  = config.width;
-            ngm.height = config.height;
             ngm.coordx = config.center[0];
             ngm.coordy = config.center[1];
             ngm.scale = parseInt(config.scale);
             ngm.range = parseInt(config.range);
             ngm.layers = config.layers;
             ngm.backgroundImageUrl = config.backgroundImageUrl;
+            console.log('configuration complete:');
             console.log(ngm);
+        },
+
+        /**
+         * initialize whole map for first time
+         * create nine separate div elements which are filled with loaded data
+         *
+         * @param config: array of configuration options
+         */
+        init: function(scale, range)
+        {
+            $('.ngm').remove();
+
+            if (parseInt(scale)>0) {
+                ngm.scale = parseInt(scale);
+            }
+
+            if (parseInt(range)>0) {
+                ngm.range = parseInt(range);
+            }
+
             if (ngm.backgroundImageUrl != undefined) {
                 background = 'background-image: url('+ngm.backgroundImageUrl+')';
             } else {
@@ -252,7 +299,7 @@ $(document).ready( function() {
             }
 
             $(ngm.selector).attr('style', 'position:absolute');
-            $(ngm.selector).html('<div class="ngm" style="width:'+ngm.width+';height:'+ngm.height+';'+background+'"></div>');
+            $(ngm.selector).html('<div class="ngm" style="width:100%;height:100%;'+background+'"></div>');
 
             var selector = ngm.selector + ' .ngm';
             map = $(selector).eq(0);
@@ -295,45 +342,24 @@ $(document).ready( function() {
             map.append('<div id="push-east" class="grid-push grid-push-east">&#x25B6;</div>');
             map.append('<div id="push-south" class="grid-push grid-push-south">&#x25BC;</div>');
 
+            map.append('<div id="zoom-in" class="zoom-tool">+</div>')
+            map.append('<div id="zoom-out" class="zoom-tool">-</div>')
+
             $(selector + ' .grid-push').on('click', function(e) {
                 e.preventDefault();
                 var id = $(this).attr('id');
                 //console.log(id);
                 switch (id) {
                     case 'push-east':
-                        //$(selector + ' .grid-svg').each(function(){
-                            //left = parseInt($(this).css('margin-left').replace('px', ''));
-                        //});
-                        //$(selector + ' .grid-div').each(function(){
-                            //left = parseInt($(this).css('margin-left').replace('px', ''));
-                        //});
                         ngm.addSystems('east');
                         break;
                     case 'push-west':
-                        //$(selector + ' .grid-svg').each(function(){
-                            //left = parseInt($(this).css('margin-left').replace('px', ''));
-                        //});
-                        //$(selector + ' .grid-div').each(function(){
-                            //left = parseInt($(this).css('margin-left').replace('px', ''));
-                        //});
                         ngm.addSystems('west');
                         break;
                     case 'push-north':
-                        //$(selector + ' .grid-svg').each(function(){
-                            //top = parseInt($(this).css('margin-top').replace('px', ''));
-                        //});
-                        //$(selector + ' .grid-div').each(function(){
-                            //top = parseInt($(this).css('margin-top').replace('px', ''));
-                        //});
                         ngm.addSystems('north');
                         break;
                     case 'push-south':
-                        //$(selector + ' .grid-svg').each(function(){
-                            //top = parseInt($(this).css('margin-top').replace('px', ''));
-                        //});
-                        //$(selector + ' .grid-div').each(function(){
-                            //top = parseInt($(this).css('margin-top').replace('px', ''));
-                        //});
                         ngm.addSystems('south');
                         break;
                     default:
@@ -341,9 +367,43 @@ $(document).ready( function() {
                 }
             });
 
+            //$('.ngm .grid-div').on('mousemove', function(e) {
+                //ngm.moveIndicator(e);
+            //})
+
+            $('#zoom-in').on('click', function(e){
+                e.preventDefault();
+                scale = ngm.scale + Math.round(ngm.scale/3);
+                range = ngm.range;
+                console.log('zoom in (scale: '+scale);
+                ngm.init(scale, range);
+                if (ngm.scale < 50) {
+                    $('#zoom-in').show();
+                } else {
+                    $('#zoom-in').hide();
+                    console.log('highest zoom level reached.');
+                }
+            });
+
+            $('#zoom-out').on('click', function(e){
+                e.preventDefault();
+                scale = ngm.scale - Math.round(ngm.scale/3);
+                range = ngm.range;
+                console.log('zoom out (scale: '+scale);
+                ngm.init(scale, range);
+                if (ngm.scale > 5) {
+                    $('#zoom-out').show();
+                } else {
+                    console.log('lowest zoom level reached.');
+                    $('#zoom-out').hide();
+                }
+            });
+
+
             $(".grid-div").on('click', function(e) {
                 coords = ngm.toggleSelect(e);
             });
+
         },
         /**
          *
@@ -636,7 +696,8 @@ $(document).ready( function() {
                     ngm.fillWithContent('south-east', data_south_east);
                 }, 500);
             }
-        },
+        }
+
 //        removeSystem: function(direction) {
 //
 //        },

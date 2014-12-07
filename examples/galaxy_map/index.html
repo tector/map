@@ -23,20 +23,23 @@
     $(document).ready(function(){
 
         var config = {
-                //'dataSourceUri': "data/dummydata-hybrid-with-sprites.json",
-                'dataSourceUri': "data/test.json",
-                'selector': '#ngm-map',
-                'center' : [1220, 1220],
-                'layers': [
-                    {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square', 'cache':'enabled'},
-                    {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle', 'cache': 'enabled'},
-                    {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square', 'cache': 'enabled'},
-                    {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
-                ],
-                'borderWidth': '1px',
-                'borderColor': '#999',
-                'backgroundImageUrl': 'img/starfield_blue.jpg',
-            }
+            //'dataSourceUri': "data/dummydata-hybrid-with-sprites.json",
+            'dataSourceUri': "data/test.json",
+            'selector': '#ngm-map',
+            'eventCallbacks': {
+                'fieldSelect': exampleCallbackFunction,
+            },
+            'center' : [1220, 1220],
+            'layers': [
+                {'name': 'misc', 'class': 'ngm-misc-layer', 'objectDefaultShape': 'square', 'cache':'enabled'},
+                {'name': 'planets', 'class': 'ngm-planets-layer', 'objectDefaultShape': 'circle', 'cache': 'enabled'},
+                {'name': 'stations', 'class': 'ngm-stations-layer', 'objectDefaultShape': 'square', 'cache': 'enabled'},
+                {'name': 'ships', 'class': 'ngm-ships-layer', 'objectDefaultShape': 'triangle'}
+            ],
+            'borderWidth': '1px',
+            'borderColor': '#999',
+            'backgroundImageUrl': 'img/starfield_blue.jpg',
+        }
 
         ngm.configurate(config);
         ngm.init();
@@ -45,6 +48,10 @@
             console.log("resize");
             ngm.init();
         };
+
+        function exampleCallbackFunction() {
+            alert('Just an example callback function! You can do whatever you want here!');
+        }
     });
     </script>
   </body>

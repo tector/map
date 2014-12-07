@@ -1,5 +1,3 @@
-$(document).ready( function() {
-
     ngm = {
         /* defaults */
         //systemsize: 50, // units
@@ -55,7 +53,8 @@ $(document).ready( function() {
 
             $(selector + ' #field-indicator').remove();
             $(selector).append('<div id="field-indicator" style="top:'+top_+'px; left:'+left+'px; width:'+scale+'px; height:'+scale+'px;"><!-- --></div>');
-            console.log('['+x+','+y+',0]');
+            console.debug('['+x+','+y+',0]');
+            console.debug($('#field-indicator'));
 
             return '['+x+','+y+',0]';
         },
@@ -66,7 +65,7 @@ $(document).ready( function() {
          * @param e  mouseclick event
          * @return coords
          */
-        toggleSelect: function (e)
+        toggleSelect: function(e)
         {
             var range = ngm.range;
             var scale = ngm.scale;
@@ -89,7 +88,11 @@ $(document).ready( function() {
 
             $(selector + ' #field-selector').remove();
             $(selector).append('<div id="field-selector" style="top:'+top_+'px; left:'+left+'px; width:'+scale+'px; height:'+scale+'px;"><!-- --></div>');
-            console.log('['+x+','+y+',0]');
+            console.debug('['+x+','+y+',0]');
+            console.debug('toggleSelect');
+            console.debug($('#field-selector'));
+
+            $(selector).trigger('fieldSelect');
 
             return '['+x+','+y+',0]';
         },
@@ -252,11 +255,11 @@ $(document).ready( function() {
 
         configurate: function(config)
         {
-            if (isNaN(config['scale']) || isNaN(config['range'])) {
-                config['width'] = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
-                config['height'] = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
-                config['scale'] = Math.round((config['height'] / 100) * 60 / 10);
-                config['range'] = 10;
+            if (isNaN(config.scale) || isNaN(config.range)) {
+                config.width = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
+                config.height = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
+                config.scale = Math.round((config.height / 100) * 60 / 10);
+                config.range = 10;
             }
 
             ngm._validateConfig(config);
@@ -270,8 +273,16 @@ $(document).ready( function() {
             ngm.range = parseInt(config.range);
             ngm.layers = config.layers;
             ngm.backgroundImageUrl = config.backgroundImageUrl;
+
+            // event callbacks are optional - but we have to provide defaults:
+            ngm.eventCallbacks = config.eventCallbacks || [];
+            ngm.eventCallbacks.fieldSelect = ngm.eventCallbacks.fieldSelect || null;
+
             console.log('configuration complete:');
             console.log(ngm);
+
+            $(ngm.selector).on('fieldSelect', ngm.eventCallbacks.fieldSelect);
+
         },
 
         /**
@@ -292,7 +303,7 @@ $(document).ready( function() {
                 ngm.range = parseInt(range);
             }
 
-            if (ngm.backgroundImageUrl != undefined) {
+            if (ngm.backgroundImageUrl !== undefined) {
                 background = 'background-image: url('+ngm.backgroundImageUrl+')';
             } else {
                 background = '';
@@ -342,8 +353,8 @@ $(document).ready( function() {
             map.append('<div id="push-east" class="grid-push grid-push-east">&#x25B6;</div>');
             map.append('<div id="push-south" class="grid-push grid-push-south">&#x25BC;</div>');
 
-            map.append('<div id="zoom-in" class="zoom-tool">+</div>')
-            map.append('<div id="zoom-out" class="zoom-tool">-</div>')
+            map.append('<div id="zoom-in" class="zoom-tool">+</div>');
+            map.append('<div id="zoom-out" class="zoom-tool">-</div>');
 
             $(selector + ' .grid-push').on('click', function(e) {
                 e.preventDefault();
@@ -367,44 +378,70 @@ $(document).ready( function() {
                 }
             });
 
-            //$('.ngm .grid-div').on('mousemove', function(e) {
-                //ngm.moveIndicator(e);
-            //})
-
-            $('#zoom-in').on('click', function(e){
+            $('.ngm #zoom-in').on('click', function(e){
                 e.preventDefault();
-                scale = ngm.scale + Math.round(ngm.scale/3);
-                range = ngm.range;
-                console.log('zoom in (scale: '+scale);
-                ngm.init(scale, range);
-                if (ngm.scale < 50) {
-                    $('#zoom-in').show();
-                } else {
-                    $('#zoom-in').hide();
-                    console.log('highest zoom level reached.');
+                ngm.zoomIn();
+            });
+
+            $('.ngm #zoom-out').on('click', function(e){
+                e.preventDefault();
+                ngm.zoomOut();
+            });
+
+            $(".ngm").on('wheel', function(e) {
+                e.preventDefault();
+                if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
+                    //console.debug('scroll up');
+                    ngm.zoomIn();
+                }
+                else {
+                    //console.debug('scroll down');
+                    ngm.zoomOut();
                 }
             });
 
-            $('#zoom-out').on('click', function(e){
-                e.preventDefault();
-                scale = ngm.scale - Math.round(ngm.scale/3);
-                range = ngm.range;
-                console.log('zoom out (scale: '+scale);
-                ngm.init(scale, range);
-                if (ngm.scale > 5) {
-                    $('#zoom-out').show();
-                } else {
-                    console.log('lowest zoom level reached.');
-                    $('#zoom-out').hide();
-                }
-            });
-
-
-            $(".grid-div").on('click', function(e) {
+            $(".ngm .grid-div").on('click', function(e) {
                 coords = ngm.toggleSelect(e);
             });
 
+//            $('.ngm .grid-div').on('mousemove', function(e) {
+//                coords = ngm.moveIndicator(e);
+//            });
+
         },
+
+        zoomOut: function()
+        {
+            if (ngm.scale > 5) {
+                scale = ngm.scale - Math.round(ngm.scale/3);
+                range = ngm.range;
+                console.debug('zoom out (scale: '+scale);
+                ngm.init(scale, range);
+            }
+            if (ngm.scale > 5) {
+                $('#zoom-out').show();
+            } else {
+                console.info('lowest zoom level reached.');
+                $('#zoom-out').hide();
+            }
+        },
+
+        zoomIn: function()
+        {
+            if (ngm.scale < 50) {
+                scale = ngm.scale + Math.round(ngm.scale/3);
+                range = ngm.range;
+                console.debug('zoom in (scale: '+scale);
+                ngm.init(scale, range);
+            }
+            if (ngm.scale < 50) {
+                $('#zoom-in').show();
+            } else {
+                $('#zoom-in').hide();
+                console.info('highest zoom level reached.');
+            }
+        },
+
         /**
          *
          * @param direction north|east|south|west
@@ -545,7 +582,7 @@ $(document).ready( function() {
                 $('.grid-div').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
                 $(selector+' #field-selector').animate({marginLeft: "-="+delta*ngm.scale+'px'}, 500);
                 ngm.coordx = ngm.coordx+delta;
-                console.log('new center xy:', ngm.coordx, ngm.coordy);
+                console.debug('new center xy:', ngm.coordx, ngm.coordy);
 
                 setTimeout(function() {
                     // delete west
@@ -584,7 +621,7 @@ $(document).ready( function() {
                 $('.grid-div').animate({marginLeft: "+="+delta*ngm.scale+'px'}, 500);
                 $(selector +' #field-selector').animate({marginLeft: "+="+delta*ngm.scale+'px'}, 500);
                 ngm.coordx = ngm.coordx-delta;
-                console.log('new center xy:', ngm.coordx, ngm.coordy);
+                console.debug('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {
                     // delete east
                     $('.grid-east').remove();
@@ -623,7 +660,7 @@ $(document).ready( function() {
                 $('.grid-div').animate({marginTop: "+="+delta*ngm.scale+'px'}, 500);
                 $(selector+' #field-selector').animate({marginTop: "+="+delta*ngm.scale+'px'}, 500);
                 ngm.coordy = ngm.coordy-delta;
-                console.log('new center xy:', ngm.coordx, ngm.coordy);
+                console.debug('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {
                     // delete south
                     $('.grid-south').remove();
@@ -662,7 +699,7 @@ $(document).ready( function() {
                 $('.grid-div').animate({marginTop: "-="+delta*ngm.scale+'px'}, 500);
                 $(selector+' #field-selector').animate({marginTop: "-="+delta*ngm.scale+'px'}, 500);
                 ngm.coordy = ngm.coordy+delta;
-                console.log('new center xy:', ngm.coordx, ngm.coordy);
+                console.debug('new center xy:', ngm.coordx, ngm.coordy);
                 setTimeout(function() {
                     // delete north
                     $('.grid-north').remove();
@@ -721,5 +758,3 @@ $(document).ready( function() {
 //            return objects_data;
 //        }
     };
-
-});

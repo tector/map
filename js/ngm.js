@@ -309,7 +309,7 @@
                 background = '';
             }
 
-            $(ngm.selector).attr('style', 'position:absolute');
+            //$(ngm.selector).attr('style', 'position:absolute');
             $(ngm.selector).html('<div class="ngm" style="width:100%;height:100%;'+background+'"></div>');
 
             var selector = ngm.selector + ' .ngm';

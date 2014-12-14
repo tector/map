@@ -310,7 +310,11 @@
             }
 
             //$(ngm.selector).attr('style', 'position:absolute');
-            $(ngm.selector).html('<div class="ngm" style="width:100%;height:100%;'+background+'"></div>');
+            //$(ngm.selector).html('<div class="ngm" style="width:100%;height:100%;'+background+'"></div>');
+            ngm_selector_parent = $(ngm.selector).parent();
+            width = ngm_selector_parent.width();
+            height = ngm_selector_parent.height();
+            $(ngm.selector).html(ngm.sprintf('<div class="ngm" style="position:relative;width:%spx;height:%spx;%s"></div>', width, height, background));
 
             var selector = ngm.selector + ' .ngm';
             map = $(selector).eq(0);

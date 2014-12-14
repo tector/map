@@ -5,6 +5,8 @@
         //width: 700,
         //height: 700,
 
+        cached : [],
+
         sprintf: function(format, etc)
         {
             var arg = arguments;
@@ -191,6 +193,14 @@
          */
         loadMapDataByCoords: function(coordx, coordy, initfullmap)
         {
+            cachekey = parseInt(coordx)+'|'+parseInt(coordy);
+            if (ngm.cached[cachekey]) {
+                console.debug('return data for '+cachekey+' from cache');
+                return ngm.cached[cachekey];
+            } else {
+                console.debug('get data for '+cachekey);
+            }
+
             var xymin = [coordx-ngm.range*0.5, coordy-ngm.range*0.5];
             var xymax = [coordx+ngm.range*0.5, coordy+ngm.range*0.5];
 
@@ -198,22 +208,24 @@
                 var json = null;
                 $.ajax({
                     jsonp: 'jsonp_callback',
-                    'async': false,
-                    'global': false,
-                    'url': ngm.sprintf(ngm.dataSourceUri, coordx, coordy),
-                    'dataType': "json",
-                    'success': function (data) {
+                    async: false,
+                    global: false,
+                    url: ngm.sprintf(ngm.dataSourceUri, coordx, coordy),
+                    dataType: "json",
+                    success: function (data) {
                         json = data;
                     }
                 });
                 return json;
             })();
 
-            return data.filter(function(el){
+            ngm.cached[cachekey] = data.filter(function(el){
                 return (el.y >= xymin[1] && el.y < xymax[1] &&
                         el.x >= xymin[0] && el.x < xymax[0]);
             });
+            return ngm.cached[cachekey];
         },
+
         /**
          * check if essential settings are given in config
          */

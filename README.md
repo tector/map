@@ -1,7 +1,9 @@
+ATTENTION: This repository is deprecated and not maintained anymore.
+
 Nouron Galaxy Map
 =================
 
-Nouron Galaxy Map is a javascript generated dynamic 2d map for browsergames
+Nouron Galaxy Map is a javascript generated dynamic 2d map for browsergames.
 
 Requirements
 ------------
@@ -215,7 +217,6 @@ Contact me via:
 
 * GitHub: https://github.com/tector
 * Twitter: @_tector
-* Email: mario.gehnke@yahoo.de
 * or visit my blog: http://tector.wordpress.com
 
 This tool is intended to be used in my browsergame project 'nouron'.
@@ -223,9 +224,8 @@ So if you like you can visit the project under the following sources:
 
 * Homepage:  www.nouron.de
 * GitHub:    https://github.com/nouron/nouron
-* Twitter:   @_nouron
-* Facebook:  http://facebook.com/nouronbg
-* Google+:   https://plus.google.com/106638531327318351915
+* ~Twitter:   @_nouron~
+* ~Facebook:  http://facebook.com/nouronbg~
 
 Thank you! :)
 
